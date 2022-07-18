@@ -8,6 +8,11 @@ module.exports = {
       webpackConfig.optimization.splitChunks = false;
       // Make sure main JS bundle is at same URL.
       webpackConfig.output.filename = 'static/js/[name].js';
+      webpackConfig.module.rules.push({
+        test: /\.mjs$/,
+        include: /node_modules/,
+        type: 'javascript/auto',
+      });
 
       // Main css bundle should be the same spot too
       const cssPlugin = webpackConfig.plugins.find(

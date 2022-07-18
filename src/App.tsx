@@ -1,6 +1,18 @@
-import { createGlobalStyle } from 'styled-components';
-import { Spin } from 'antd';
+import styled, { createGlobalStyle } from 'styled-components';
+import { useEffect, useRef, useState } from 'react';
+import { DateRangePicker, FocusedInputShape } from 'react-dates';
+import moment from 'moment';
+import 'react-dates/initialize';
+import 'react-dates/lib/css/_datepicker.css';
+import { csv } from 'd3-fetch';
 import 'antd/dist/antd.css';
+import { Radio, Spin } from 'antd';
+import maxBy from 'lodash.maxby';
+import minBy from 'lodash.minby';
+import {
+  AggregatedDataType, DataType, DateRangeType, HourlyTweetData,
+} from './types';
+import Dashboard from './Dashboard';
 
 const GlobalStyle = createGlobalStyle`
   :root {
@@ -158,11 +170,174 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-const App = () => (
-  <>
-    <GlobalStyle />
-    <Spin size='large' />
-  </>
-);
+const getDaysArray = (start: Date, end: Date) => {
+  const arr = [];
+  for (let dt = start; dt <= end; dt.setDate(dt.getDate() + 1)) {
+    arr.push(new Date(Date.UTC(dt.getFullYear(), dt.getMonth(), dt.getDate())));
+  }
+  return arr;
+};
+
+const getTweetDataSummary = (data: DataType[], category?:number) => {
+  const maleTweet = !category ? data.filter((d) => d.gender === 0).length : data.filter((d) => d.gender === 0 && d.tag === category).length;
+  const femaleTweet = !category ? data.filter((d) => d.gender === 1).length : data.filter((d) => d.gender === 1 && d.tag === category).length;
+  const maleHateTweet = !category ? data.filter((d) => d.gender === 0 && d.hateSpeech === 1).length : data.filter((d) => d.gender === 0 && d.hateSpeech === 1 && d.tag === category).length;
+  const femaleHateTweet = !category ? data.filter((d) => d.gender === 1 && d.hateSpeech === 1).length : data.filter((d) => d.gender === 1 && d.hateSpeech === 1 && d.tag === category).length;
+  return {
+    totalTweet: maleTweet + femaleTweet,
+    totalHateTweet: maleHateTweet + femaleHateTweet,
+    maleTweet,
+    femaleTweet,
+    maleHateTweet,
+    femaleHateTweet,
+  };
+};
+
+const ContainerEl = styled.div`
+  width: 100%;
+  max-width: 128rem;
+  margin: auto;
+  padding: 2rem 0;
+`;
+
+const SettingsPanel = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const App = () => {
+  const divRef = useRef<any>(null);
+  const [selectedGender, setSelectedGender] = useState<'All' | 'Male' | 'Female'>('All');
+  const [selectedTag, setSelectedTag] = useState<'total' | 'Edu' | 'Stem' | 'Violence' | 'Reproduction' | 'Work' | 'Politics'>('total');
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const [finalData, setFinalData] = useState<AggregatedDataType[] | null>(null);
+  const [hourlyFinalData, setHourlyFinalData] = useState<HourlyTweetData[] | null>(null);
+  const [dates, setDates] = useState<DateRangeType | null>(null);
+  const [minMaxdate, setMinMaxDate] = useState<DateRangeType | null>(null);
+  useEffect(() => {
+    csv('./data/ColombiaCSV.csv')
+      .then((data: any) => {
+        const dataFormatted: DataType[] = data.map((d: any) => {
+          const date = new Date(d.created);
+          const day = date.getUTCDate();
+          const month = months[date.getUTCMonth()];
+          const year = date.getUTCFullYear();
+          return ({
+            tag: +d.tag,
+            created: date,
+            createdString: d.created,
+            date: new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())),
+            dateString: `${day}-${month}-${year}`,
+            dateTime: new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours())),
+            hour: date.getUTCHours(),
+            retweetCount: +d.retweetCount,
+            gender: +d.gender,
+            tweet: d.tweet,
+            hateSpeech: +d.HateSpeech,
+          });
+        });
+
+        const aggregatedData: AggregatedDataType[] = getDaysArray((minBy(dataFormatted, (d) => new Date(d.createdString)) as DataType).created, (maxBy(dataFormatted, (d) => new Date(d.createdString)) as DataType).created).map((date) => {
+          const filteredDataByDate = dataFormatted.filter((d) => d.date.getUTCDate() === date.getUTCDate() && d.date.getUTCMonth() === date.getUTCMonth() && d.date.getUTCFullYear() === date.getUTCFullYear());
+          const hourlyData = Array.from(Array(24).keys()).map((hour) => {
+            const filteredDatabyHour = filteredDataByDate.filter((d) => d.hour === hour);
+            return {
+              hour,
+              dateDay: new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())),
+              dateTime: new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), hour)),
+              total: getTweetDataSummary(filteredDatabyHour),
+              Edu: getTweetDataSummary(filteredDatabyHour, 1),
+              Stem: getTweetDataSummary(filteredDatabyHour, 2),
+              Violence: getTweetDataSummary(filteredDatabyHour, 3),
+              Reproduction: getTweetDataSummary(filteredDatabyHour, 4),
+              Work: getTweetDataSummary(filteredDatabyHour, 5),
+              Politics: getTweetDataSummary(filteredDatabyHour, 6),
+            };
+          });
+          return {
+            date,
+            total: getTweetDataSummary(filteredDataByDate),
+            Edu: getTweetDataSummary(filteredDataByDate, 1),
+            Stem: getTweetDataSummary(filteredDataByDate, 2),
+            Violence: getTweetDataSummary(filteredDataByDate, 3),
+            Reproduction: getTweetDataSummary(filteredDataByDate, 4),
+            Work: getTweetDataSummary(filteredDataByDate, 5),
+            Politics: getTweetDataSummary(filteredDataByDate, 6),
+            hourlyData,
+          };
+        });
+        const hourlyAggregateData: HourlyTweetData[] = [];
+        aggregatedData.forEach((d) => {
+          d.hourlyData.forEach((el) => {
+            hourlyAggregateData.push(el);
+          });
+        });
+        setFinalData(aggregatedData);
+        setHourlyFinalData(hourlyAggregateData);
+        setMinMaxDate({
+          startDate: moment((minBy(dataFormatted, 'date') as DataType).date),
+          endDate: moment((maxBy(dataFormatted, 'date') as DataType).date),
+        });
+        setDates({
+          startDate: moment((minBy(dataFormatted, 'date') as DataType).date),
+          endDate: moment((maxBy(dataFormatted, 'date') as DataType).date),
+        });
+      });
+  }, []);
+  const [focussedDate, setFocusedData] = useState<FocusedInputShape | null>(null);
+  return (
+    <div ref={divRef}>
+      <GlobalStyle />
+      <ContainerEl>
+        {
+          finalData && hourlyFinalData && dates && minMaxdate
+            ? (
+              <>
+                <SettingsPanel>
+                  <Radio.Group size='large' defaultValue='All' buttonStyle='solid' value={selectedGender} onChange={(event) => { setSelectedGender(event.target.value); }}>
+                    <Radio.Button value='All'>All Gender</Radio.Button>
+                    <Radio.Button value='Male'>Male</Radio.Button>
+                    <Radio.Button value='Female'>Female</Radio.Button>
+                  </Radio.Group>
+                  <Radio.Group size='large' defaultValue='total' buttonStyle='solid' value={selectedTag} onChange={(event) => { setSelectedTag(event.target.value); }}>
+                    <Radio.Button value='total'>All</Radio.Button>
+                    <Radio.Button value='Edu'>Education</Radio.Button>
+                    <Radio.Button value='Stem'>STEM</Radio.Button>
+                    <Radio.Button value='Violence'>Violence</Radio.Button>
+                    <Radio.Button value='Reproduction'>Reproduction</Radio.Button>
+                    <Radio.Button value='Work'>Work</Radio.Button>
+                    <Radio.Button value='Politics'>Politics</Radio.Button>
+                  </Radio.Group>
+                  <DateRangePicker
+                    startDate={dates.startDate}
+                    isOutsideRange={() => false}
+                    displayFormat='DD-MMM-YYYY'
+                    startDateId='your_unique_start_date_id'
+                    minDate={minMaxdate.startDate}
+                    endDate={dates.endDate}
+                    maxDate={minMaxdate.endDate}
+                    endDateId='your_unique_end_date_id'
+                    onDatesChange={({ startDate, endDate }) => { setDates({ startDate: startDate || moment(finalData[0].date), endDate: endDate || moment(finalData[finalData.length - 1].date) }); }}
+                    focusedInput={focussedDate}
+                    onFocusChange={(focusedInput) => { setFocusedData(focusedInput); }}
+                  />
+                </SettingsPanel>
+                <Dashboard
+                  data={finalData.filter((d) => moment(d.date) >= dates.startDate && moment(d.date) <= dates.endDate)}
+                  hourlyData={hourlyFinalData}
+                  selectedTag={selectedTag}
+                  setSelectedTag={setSelectedTag}
+                  selectedGender={selectedGender}
+                  setSelectedGender={setSelectedGender}
+                />
+              </>
+            )
+            : <Spin />
+        }
+      </ContainerEl>
+    </div>
+  );
+};
 
 export default App;
