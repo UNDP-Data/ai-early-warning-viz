@@ -9,6 +9,7 @@ import { DonutChartCard } from './Components/DonutChart';
 import { BarChartCard } from './Components/BarChart';
 import TimeSeries from './Components/TimeSeries';
 import { AggregatedDataType, HourlyTweetData } from './types';
+// import TimeSeriesRefactored from './Components/TimeSeries/TimeSeries';
 
 interface Props {
   data: AggregatedDataType[];
@@ -175,8 +176,6 @@ const Dashboard = (props: Props) => {
               </Radio.Group>
             </TitleContainer>
             <TimeSeries
-              title='All Tweets'
-              hourly={timeFrame === 'Hourly'}
               data={timeFrame === 'Day'
                 ? data.map((d) => ({
                   dateTime: d.date, totalTweet: d[selectedTag].totalTweet, totalFemaleTweet: d[selectedTag].femaleTweet, totalHateTweet: d[selectedTag].totalHateTweet, totalFemalehateTweet: d[selectedTag].femaleHateTweet,
@@ -184,19 +183,7 @@ const Dashboard = (props: Props) => {
                 : hourlyData.map((d) => ({
                   dateTime: d.dateTime, totalTweet: d[selectedTag].totalTweet, totalFemaleTweet: d[selectedTag].femaleTweet, totalHateTweet: d[selectedTag].totalHateTweet, totalFemalehateTweet: d[selectedTag].femaleHateTweet,
                 }))}
-              type='all'
-            />
-            <TimeSeries
-              title='Hate Speech Tweets'
               hourly={timeFrame === 'Hourly'}
-              data={timeFrame === 'Day'
-                ? data.map((d) => ({
-                  dateTime: d.date, totalTweet: d[selectedTag].totalTweet, totalFemaleTweet: d[selectedTag].femaleTweet, totalHateTweet: d[selectedTag].totalHateTweet, totalFemalehateTweet: d[selectedTag].femaleHateTweet,
-                }))
-                : hourlyData.map((d) => ({
-                  dateTime: d.dateTime, totalTweet: d[selectedTag].totalTweet, totalFemaleTweet: d[selectedTag].femaleTweet, totalHateTweet: d[selectedTag].totalHateTweet, totalFemalehateTweet: d[selectedTag].femaleHateTweet,
-                }))}
-              type='hate'
             />
           </RootEl>
         </>

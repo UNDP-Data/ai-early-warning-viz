@@ -21,7 +21,6 @@ export interface TweetData {
   maleHateTweet: number;
   femaleHateTweet: number;
 }
-
 export interface SummaryDataType {
   total: TweetData;
   Edu: TweetData;
@@ -46,4 +45,13 @@ export interface AggregatedDataType extends SummaryDataType {
 export interface DateRangeType {
   startDate: moment.Moment;
   endDate: moment.Moment;
+}
+
+export interface TooltipDatatype {
+  dateTime: Date;
+  totalTweet: number;
+  totalFemaleTweet: number;
+  totalHateTweet: number;
+  totalFemalehateTweet: number;
+  xPos: number;
 }
