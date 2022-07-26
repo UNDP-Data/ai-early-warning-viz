@@ -9,7 +9,8 @@ interface Props {
   subNote: string;
   subNoteValue: number;
   opacity: [number, number];
-  setGender?: (_d: 'Male' | 'Female' | 'All') => void;
+  setGender?: (_d: 'Men' | 'Women' | 'All') => void;
+  setType?: (_d: 'Hate' | 'All') => void;
 }
 
 const ContentEl = styled.div`
@@ -82,10 +83,11 @@ export const DonutChartCard = (props: Props) => {
     subNote,
     subNoteValue,
     opacity,
+    setType,
     setGender,
   } = props;
 
-  const formatData = (d: number) => format(',')(parseFloat(d.toFixed(0))).replace(',', ' ');
+  const formatData = (d: number) => format(',')(parseFloat(d.toFixed(0)));
   return (
     <RootEl>
       <TitleEl>{title}</TitleEl>
@@ -94,7 +96,14 @@ export const DonutChartCard = (props: Props) => {
         <div>
           {keyValue[0]}
           {' '}
-          <span className='bold'>{values[0]}</span>
+          <span className='bold'>
+            {formatData(values[0])}
+            {' '}
+            (
+            {((values[0] * 100) / (values[0] + values[1])).toFixed(1)}
+            %
+            )
+          </span>
         </div>
       </KeyEl>
       <KeyEl>
@@ -102,7 +111,14 @@ export const DonutChartCard = (props: Props) => {
         <div>
           {keyValue[1]}
           {' '}
-          <span className='bold'>{values[1]}</span>
+          <span className='bold'>
+            {formatData(values[1])}
+            {' '}
+            (
+            {((values[1] * 100) / (values[0] + values[1])).toFixed(1)}
+            %
+            )
+          </span>
         </div>
       </KeyEl>
       <ContentEl>
@@ -116,7 +132,11 @@ export const DonutChartCard = (props: Props) => {
             onClick={() => {
               if (setGender) {
                 if (opacity[1] !== 1) setGender('All');
-                else setGender('Male');
+                else setGender('Men');
+              }
+              if (setType) {
+                if (opacity[1] !== 1) setType('All');
+                else setType('Hate');
               }
             }}
           />
@@ -129,7 +149,10 @@ export const DonutChartCard = (props: Props) => {
             onClick={() => {
               if (setGender) {
                 if (opacity[0] !== 1) setGender('All');
-                else setGender('Female');
+                else setGender('Women');
+              }
+              if (setType) {
+                if (opacity[1] !== 1) setType('All');
               }
             }}
           />

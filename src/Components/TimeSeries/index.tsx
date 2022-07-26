@@ -1,13 +1,18 @@
-import { useState } from 'react';
+import { nest } from 'd3-collection';
+import sumBy from 'lodash.sumby';
+import moment from 'moment';
 import styled from 'styled-components';
 import TimeSeries from './TimeSeries';
+import TimeSeriesHate from './TimeSeriesHate';
 
 interface Datatype {
-  dateTime: Date;
+  dateTime: moment.Moment;
   totalTweet: number;
   totalFemaleTweet: number;
+  totalMaleTweet: number;
   totalHateTweet: number;
   totalFemalehateTweet: number;
+  totalMalehateTweet: number;
 }
 
 interface PassedProps {
@@ -31,25 +36,34 @@ const TimeSeriesEl = (props: PassedProps) => {
     data,
     hourly,
   } = props;
-  const [brushSettings, setBrushSettings] = useState<[number, number] | null>(null);
+  const finalData = hourly ? data : nest()
+    .key((d: any) => d.dateTime.format('D-MMM-YYYY'))
+    .entries(data)
+    .map((d) => ({
+      dateTime: moment(d.key),
+      totalTweet: sumBy(d.values, 'totalTweet'),
+      totalFemaleTweet: sumBy(d.values, 'totalFemaleTweet'),
+      totalMaleTweet: sumBy(d.values, 'totalMaleTweet'),
+      totalHateTweet: sumBy(d.values, 'totalHateTweet'),
+      totalFemalehateTweet: sumBy(d.values, 'totalFemalehateTweet'),
+      totalMalehateTweet: sumBy(d.values, 'totalMalehateTweet'),
+    }));
   return (
     <>
       <RootEl>
-        <TitleEl>All Tweets</TitleEl>
+        <TitleEl>All tweets</TitleEl>
         <TimeSeries
-          data={data}
-          type='all'
-          brushSettings={brushSettings}
-          setBrushSettings={setBrushSettings}
+          data={finalData}
           hourly={hourly}
+          borderColor={['#00C4AA', '#8700F9', '#a8071a']}
+          fillColor={['#D9F6F2', '#EDD9FE', '#ffccc7']}
         />
-        <TitleEl>Hate Speech Tweets</TitleEl>
-        <TimeSeries
-          data={data}
-          type='hate'
-          brushSettings={brushSettings}
-          setBrushSettings={setBrushSettings}
+        <TitleEl>Tweets with hate speech</TitleEl>
+        <TimeSeriesHate
+          data={finalData}
           hourly={hourly}
+          borderColor='#a8071a'
+          fillColor='#ffccc7'
         />
       </RootEl>
     </>

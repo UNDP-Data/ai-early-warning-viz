@@ -7,9 +7,9 @@ interface Props {
   title: string;
   values: number[];
   keyValue: string[];
-  keyValueCode: ('Edu' | 'Stem' | 'Violence' | 'Reproduction' | 'Work' | 'Politics')[];
-  selectedTag: 'total' | 'Edu' | 'Stem' | 'Violence' | 'Reproduction' | 'Work' | 'Politics';
-  setSelectedTag: (_d: 'Edu' | 'Stem' | 'Violence' | 'Reproduction' | 'Work' | 'Politics' | 'total') => void;
+  keyValueCode: ('total' | 'education' | 'violence' | 'reproduction' | 'work' | 'politics')[];
+  selectedTag: 'total' | 'education' | 'violence' | 'reproduction' | 'work' | 'politics';
+  setSelectedTag: (_d: 'total' | 'education' | 'violence' | 'reproduction' | 'work' | 'politics') => void;
 }
 
 const ContentEl = styled.div`

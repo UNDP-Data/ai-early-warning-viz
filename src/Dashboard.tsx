@@ -8,23 +8,24 @@ import sumBy from 'lodash.sumby';
 import { DonutChartCard } from './Components/DonutChart';
 import { BarChartCard } from './Components/BarChart';
 import TimeSeries from './Components/TimeSeries';
-import { AggregatedDataType, HourlyTweetData } from './types';
-// import TimeSeriesRefactored from './Components/TimeSeries/TimeSeries';
+import { DateRangeType, FinalHourlyDataType } from './types';
 
 interface Props {
-  data: AggregatedDataType[];
-  hourlyData: HourlyTweetData[];
-  selectedTag: 'total' | 'Edu' | 'Stem' | 'Violence' | 'Reproduction' | 'Work' | 'Politics';
-  setSelectedTag: (_d: 'total' | 'Edu' | 'Stem' | 'Violence' | 'Reproduction' | 'Work' | 'Politics') => void;
-  selectedGender: 'All' | 'Male' | 'Female';
-  setSelectedGender: (_d: 'All' | 'Male' | 'Female') => void;
+  hourlyData: FinalHourlyDataType;
+  selectedTag: 'total' | 'education' | 'violence' | 'reproduction' | 'work' | 'politics';
+  setSelectedTag: (_d: 'total' | 'education' | 'violence' | 'reproduction' | 'work' | 'politics') => void;
+  selectedGender: 'All' | 'Men' | 'Women';
+  setSelectedGender: (_d: 'All' | 'Men' | 'Women') => void;
+  selectedType: 'All' | 'Hate';
+  setSelectedType: (_d: 'All' | 'Hate') => void;
+  dates: DateRangeType;
 }
 
 const ContainerEl = styled.div`
   width: 100%;
   max-width: 128rem;
   margin: auto;
-  padding: 2rem 0;
+  padding: 1rem 0 2rem 0;
 `;
 
 const RowEl = styled.div`
@@ -54,135 +55,137 @@ const TitleEl = styled.div`
   margin-bottom: 2rem;
 `;
 
-const getTweetSum = (data: AggregatedDataType[], tag: 'total' | 'Edu' | 'Stem' | 'Violence' | 'Reproduction' | 'Work' | 'Politics') => ({
-  totalTweet: sumBy(data, (d) => d[tag].totalTweet),
-  totalHateTweet: sumBy(data, (d) => d[tag].totalHateTweet),
-  maleTweet: sumBy(data, (d) => d[tag].maleTweet),
-  femaleTweet: sumBy(data, (d) => d[tag].femaleTweet),
-  maleHateTweet: sumBy(data, (d) => d[tag].maleHateTweet),
-  femaleHateTweet: sumBy(data, (d) => d[tag].femaleHateTweet),
-});
-
 const Dashboard = (props: Props) => {
   const {
-    data,
     hourlyData,
     selectedTag,
     setSelectedTag,
     selectedGender,
     setSelectedGender,
+    selectedType,
+    setSelectedType,
+    dates,
   } = props;
   const totalData = {
-    total: getTweetSum(data, 'total'),
-    Edu: getTweetSum(data, 'Edu'),
-    Stem: getTweetSum(data, 'Stem'),
-    Violence: getTweetSum(data, 'Violence'),
-    Reproduction: getTweetSum(data, 'Reproduction'),
-    Work: getTweetSum(data, 'Work'),
-    Politics: getTweetSum(data, 'Politics'),
+    totalTweet: sumBy(hourlyData[selectedTag].filter((d) => d.dateTime >= dates.startDate && d.dateTime <= dates.endDate), (d) => d.tweets),
+    maleTweet: sumBy(hourlyData[selectedTag].filter((d) => d.dateTime >= dates.startDate && d.dateTime <= dates.endDate), (d) => d.male),
+    maleHateTweet: sumBy(hourlyData[selectedTag].filter((d) => d.dateTime >= dates.startDate && d.dateTime <= dates.endDate), (d) => d.maleHate),
+    femaleHateTweet: sumBy(hourlyData[selectedTag].filter((d) => d.dateTime >= dates.startDate && d.dateTime <= dates.endDate), (d) => d.femaleHate),
   };
-  const [timeFrame, setTimeFrame] = useState<'Hourly' | 'Day'>('Hourly');
+  const totalDataForBar = {
+    totalTweet: sumBy(hourlyData.total.filter((d) => d.dateTime >= dates.startDate && d.dateTime <= dates.endDate), (d) => (selectedType === 'All' ? d.tweets : d.maleHate + d.femaleHate)),
+    maletotalTweet: sumBy(hourlyData.total.filter((d) => d.dateTime >= dates.startDate && d.dateTime <= dates.endDate), (d) => (selectedType === 'All' ? d.male : d.maleHate)),
+    eduTweet: sumBy(hourlyData.education.filter((d) => d.dateTime >= dates.startDate && d.dateTime <= dates.endDate), (d) => (selectedType === 'All' ? d.tweets : d.maleHate + d.femaleHate)),
+    maleEduTweet: sumBy(hourlyData.education.filter((d) => d.dateTime >= dates.startDate && d.dateTime <= dates.endDate), (d) => (selectedType === 'All' ? d.male : d.maleHate)),
+    politicsTweet: sumBy(hourlyData.politics.filter((d) => d.dateTime >= dates.startDate && d.dateTime <= dates.endDate), (d) => (selectedType === 'All' ? d.tweets : d.maleHate + d.femaleHate)),
+    malePoliticsTweet: sumBy(hourlyData.politics.filter((d) => d.dateTime >= dates.startDate && d.dateTime <= dates.endDate), (d) => (selectedType === 'All' ? d.male : d.maleHate)),
+    reproductionTweet: sumBy(hourlyData.reproduction.filter((d) => d.dateTime >= dates.startDate && d.dateTime <= dates.endDate), (d) => (selectedType === 'All' ? d.tweets : d.maleHate + d.femaleHate)),
+    maleReproductionTweet: sumBy(hourlyData.reproduction.filter((d) => d.dateTime >= dates.startDate && d.dateTime <= dates.endDate), (d) => (selectedType === 'All' ? d.male : d.maleHate)),
+    violenceTweet: sumBy(hourlyData.violence.filter((d) => d.dateTime >= dates.startDate && d.dateTime <= dates.endDate), (d) => (selectedType === 'All' ? d.tweets : d.maleHate + d.femaleHate)),
+    maleViolenceTweet: sumBy(hourlyData.violence.filter((d) => d.dateTime >= dates.startDate && d.dateTime <= dates.endDate), (d) => (selectedType === 'All' ? d.male : d.maleHate)),
+    workTweet: sumBy(hourlyData.work.filter((d) => d.dateTime >= dates.startDate && d.dateTime <= dates.endDate), (d) => (selectedType === 'All' ? d.tweets : d.maleHate + d.femaleHate)),
+    maleWorkTweet: sumBy(hourlyData.work.filter((d) => d.dateTime >= dates.startDate && d.dateTime <= dates.endDate), (d) => (selectedType === 'All' ? d.male : d.maleHate)),
+  };
+  const [timeFrame, setTimeFrame] = useState<'Hourly' | 'Day'>('Day');
   return (
     <div>
       <ContainerEl>
         <>
           <RowEl>
             <DonutChartCard
-              title='Total Tweets By Gender'
-              values={[totalData[selectedTag].maleTweet, totalData[selectedTag].femaleTweet]}
-              keyValue={['By Male', 'By Female']}
+              title={selectedType === 'All' ? 'Tweets by gender' : 'Tweets with hate speech by gender'}
+              values={selectedType === 'All' ? [totalData.maleTweet, totalData.totalTweet - totalData.maleTweet] : [totalData.maleHateTweet, totalData.femaleHateTweet]}
+              keyValue={['Men', 'Women']}
               color={['#00C4AA', '#8700F9']}
-              opacity={[selectedGender !== 'Female' ? 1 : 0.3, selectedGender !== 'Male' ? 1 : 0.3]}
-              subNote='Total Tweets'
-              subNoteValue={totalData[selectedTag].maleTweet + totalData[selectedTag].femaleTweet}
+              opacity={[selectedGender !== 'Women' ? 1 : 0.3, selectedGender !== 'Men' ? 1 : 0.3]}
+              subNote={selectedType === 'All' ? 'Total tweets' : 'Hate tweets'}
+              subNoteValue={selectedType === 'All' ? totalData.totalTweet : totalData.maleHateTweet + totalData.femaleHateTweet}
               setGender={setSelectedGender}
             />
             <DonutChartCard
-              title={selectedGender === 'All' ? 'Total Hate Tweets' : `Total Hate Tweets by ${selectedGender}`}
+              title={selectedGender === 'All' ? 'Tweets with hate speech' : `Tweets with hate speech by ${selectedGender}`}
               values={
-                      [
-                        selectedGender === 'All'
-                          ? totalData[selectedTag].totalHateTweet
-                          : selectedGender === 'Male'
-                            ? totalData[selectedTag].maleHateTweet
-                            : totalData[selectedTag].femaleHateTweet,
-                        selectedGender === 'All'
-                          ? totalData[selectedTag].totalTweet - totalData[selectedTag].totalHateTweet
-                          : selectedGender === 'Male'
-                            ? totalData[selectedTag].maleTweet - totalData[selectedTag].maleHateTweet
-                            : totalData[selectedTag].femaleTweet - totalData[selectedTag].femaleHateTweet,
-                      ]
-                    }
-              keyValue={['Hate Speech Tweet', 'Non Hate Speech Tweet']}
-              color={['#D12800', '#AAA']}
+                [
+                  selectedGender === 'All'
+                    ? totalData.maleHateTweet + totalData.femaleHateTweet
+                    : selectedGender === 'Men'
+                      ? totalData.maleHateTweet
+                      : totalData.femaleHateTweet,
+                  selectedGender === 'All'
+                    ? totalData.totalTweet - (totalData.maleHateTweet + totalData.femaleHateTweet)
+                    : selectedGender === 'Men'
+                      ? totalData.maleTweet - totalData.maleHateTweet
+                      : (totalData.totalTweet - totalData.maleTweet) - totalData.femaleHateTweet,
+                ]
+              }
+              keyValue={['Tweets with hate speech', 'Tweets without hate speech']}
+              color={['#a8071a', '#AAA']}
               subNote='Hate Speech Tweet'
               subNoteValue={
                       selectedGender === 'All'
-                        ? totalData[selectedTag].totalHateTweet
-                        : selectedGender === 'Male'
-                          ? totalData[selectedTag].maleHateTweet
-                          : totalData[selectedTag].femaleHateTweet
+                        ? totalData.maleHateTweet + totalData.femaleHateTweet
+                        : selectedGender === 'Men'
+                          ? totalData.maleHateTweet
+                          : totalData.femaleHateTweet
                     }
-              opacity={[1, 1]}
+              opacity={[1, selectedType !== 'All' ? 0.3 : 1]}
+              setType={setSelectedType}
             />
             <BarChartCard
-              title='Tweets By Categories'
+              title={selectedType === 'All' ? 'Tweets by categories' : ' Tweet with hate speech by category'}
               selectedTag={selectedTag}
               values={
-                      [
-                        selectedGender === 'All'
-                          ? totalData.Edu.totalTweet
-                          : selectedGender === 'Male'
-                            ? totalData.Edu.maleTweet
-                            : totalData.Edu.femaleTweet,
-                        selectedGender === 'All'
-                          ? totalData.Politics.totalTweet
-                          : selectedGender === 'Male'
-                            ? totalData.Politics.maleTweet
-                            : totalData.Politics.femaleTweet,
-                        selectedGender === 'All'
-                          ? totalData.Reproduction.totalTweet
-                          : selectedGender === 'Male'
-                            ? totalData.Reproduction.maleTweet
-                            : totalData.Reproduction.femaleTweet,
-                        selectedGender === 'All'
-                          ? totalData.Stem.totalTweet
-                          : selectedGender === 'Male'
-                            ? totalData.Stem.maleTweet
-                            : totalData.Stem.femaleTweet,
-                        selectedGender === 'All'
-                          ? totalData.Violence.totalTweet
-                          : selectedGender === 'Male'
-                            ? totalData.Violence.maleTweet
-                            : totalData.Violence.femaleTweet,
-                        selectedGender === 'All'
-                          ? totalData.Work.totalTweet
-                          : selectedGender === 'Male'
-                            ? totalData.Work.maleTweet
-                            : totalData.Work.femaleTweet,
-                      ]
-                    }
-              keyValue={['Education', 'Politics', 'Reproduction', 'STEM', 'Violence', 'Work']}
-              keyValueCode={['Edu', 'Politics', 'Reproduction', 'Stem', 'Violence', 'Work']}
+                [
+                  selectedGender === 'All'
+                    ? totalDataForBar.totalTweet
+                    : selectedGender === 'Men'
+                      ? totalDataForBar.maletotalTweet
+                      : totalDataForBar.totalTweet - totalDataForBar.maletotalTweet,
+                  selectedGender === 'All'
+                    ? totalDataForBar.politicsTweet
+                    : selectedGender === 'Men'
+                      ? totalDataForBar.malePoliticsTweet
+                      : totalDataForBar.politicsTweet - totalDataForBar.malePoliticsTweet,
+                  selectedGender === 'All'
+                    ? totalDataForBar.reproductionTweet
+                    : selectedGender === 'Men'
+                      ? totalDataForBar.maleReproductionTweet
+                      : totalDataForBar.reproductionTweet - totalDataForBar.maleReproductionTweet,
+                  selectedGender === 'All'
+                    ? totalDataForBar.violenceTweet
+                    : selectedGender === 'Men'
+                      ? totalDataForBar.maleViolenceTweet
+                      : totalDataForBar.violenceTweet - totalDataForBar.maleViolenceTweet,
+                  selectedGender === 'All'
+                    ? totalDataForBar.workTweet
+                    : selectedGender === 'Men'
+                      ? totalDataForBar.maleWorkTweet
+                      : totalDataForBar.workTweet - totalDataForBar.maleWorkTweet,
+                ]
+              }
+              keyValue={['Education', 'Politics', 'Reproduction', 'Violence', 'Employment']}
+              keyValueCode={['education', 'politics', 'reproduction', 'violence', 'work']}
               setSelectedTag={setSelectedTag}
             />
           </RowEl>
           <RootEl>
             <TitleContainer>
-              <TitleEl>Time Series Data</TitleEl>
+              <TitleEl>Tweet trends over time</TitleEl>
               <Radio.Group value={timeFrame} buttonStyle='solid' onChange={(event) => { setTimeFrame(event.target.value); }}>
-                <Radio.Button value='Hourly'>Hourly</Radio.Button>
                 <Radio.Button value='Day'>Day</Radio.Button>
+                <Radio.Button value='Hourly'>Hourly</Radio.Button>
               </Radio.Group>
             </TitleContainer>
             <TimeSeries
-              data={timeFrame === 'Day'
-                ? data.map((d) => ({
-                  dateTime: d.date, totalTweet: d[selectedTag].totalTweet, totalFemaleTweet: d[selectedTag].femaleTweet, totalHateTweet: d[selectedTag].totalHateTweet, totalFemalehateTweet: d[selectedTag].femaleHateTweet,
-                }))
-                : hourlyData.map((d) => ({
-                  dateTime: d.dateTime, totalTweet: d[selectedTag].totalTweet, totalFemaleTweet: d[selectedTag].femaleTweet, totalHateTweet: d[selectedTag].totalHateTweet, totalFemalehateTweet: d[selectedTag].femaleHateTweet,
-                }))}
+              data={hourlyData[selectedTag].filter((d) => d.dateTime >= dates.startDate && d.dateTime <= dates.endDate).map((d) => ({
+                dateTime: d.dateTime,
+                totalTweet: d.tweets,
+                totalMaleTweet: d.male,
+                totalFemaleTweet: d.tweets - d.male,
+                totalHateTweet: d.maleHate + d.femaleHate,
+                totalMalehateTweet: d.maleHate,
+                totalFemalehateTweet: d.femaleHate,
+              }))}
               hourly={timeFrame === 'Hourly'}
             />
           </RootEl>
