@@ -36,7 +36,7 @@ const SettingsPanel = styled.div`
   align-items: center;
   flex-wrap: wrap;
 `;
-const DATASOURCELINK = 'https://data.undp.org/EWS/';
+const DATASOURCELINK = 'https://data.undp.org/data/EWS/';
 
 const MainArea = (props: PassedProps) => {
   const { country } = props;
