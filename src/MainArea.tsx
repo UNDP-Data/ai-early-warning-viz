@@ -48,7 +48,7 @@ const MainArea = (props: PassedProps) => {
   const [minMaxdate, setMinMaxDate] = useState<DateRangeType | null>(null);
   useEffect(() => {
     setHourlyFinalData(null);
-    csv(`./data/${country}Data.csv`)
+    csv(`${process.env.NODE_ENV === 'development' ? './data/' : 'https://data.undp.org/EWS/'}${country}Data.csv`)
       .then((data: any) => {
         const minDate = min(uniqBy(data, 'date').map((d: any) => moment(d.date, 'MM-DD-YYYY'))) as moment.Moment;
         const maxDate = max(uniqBy(data, 'date').map((d: any) => moment(d.date, 'MM-DD-YYYY'))) as moment.Moment;
