@@ -36,7 +36,7 @@ const SettingsPanel = styled.div`
   align-items: center;
   flex-wrap: wrap;
 `;
-const DATASOURCELINK = 'https://data.undp.org/EWS/';
+const DATASOURCELINK = './data/';
 
 const MainArea = (props: PassedProps) => {
   const { country } = props;
@@ -212,6 +212,7 @@ const MainArea = (props: PassedProps) => {
                   selectedType={selectedType}
                   dates={dates}
                   setSelectedGender={setSelectedGender}
+                  country={country}
                 />
               </>
             )
