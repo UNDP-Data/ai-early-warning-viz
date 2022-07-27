@@ -36,6 +36,7 @@ const SettingsPanel = styled.div`
   align-items: center;
   flex-wrap: wrap;
 `;
+const DATASOURCELINK = 'https://data.undp.org/EWS/';
 
 const MainArea = (props: PassedProps) => {
   const { country } = props;
@@ -48,7 +49,7 @@ const MainArea = (props: PassedProps) => {
   const [minMaxdate, setMinMaxDate] = useState<DateRangeType | null>(null);
   useEffect(() => {
     setHourlyFinalData(null);
-    csv(`${process.env.NODE_ENV === 'development' ? './data/' : 'https://data.undp.org/EWS/'}${country}Data.csv`)
+    csv(`${DATASOURCELINK}${country}Data.csv`)
       .then((data: any) => {
         const minDate = min(uniqBy(data, 'date').map((d: any) => moment(d.date, 'MM-DD-YYYY'))) as moment.Moment;
         const maxDate = max(uniqBy(data, 'date').map((d: any) => moment(d.date, 'MM-DD-YYYY'))) as moment.Moment;
