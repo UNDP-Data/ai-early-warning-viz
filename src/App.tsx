@@ -1,9 +1,5 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-loop-func */
 import styled, { createGlobalStyle } from 'styled-components';
 import { useState } from 'react';
-import { Radio, Select } from 'antd';
 import 'antd/dist/antd.css';
 import MainArea from './MainArea';
 
