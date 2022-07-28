@@ -99,8 +99,8 @@ const Dashboard = (props: Props) => {
               title={selectedType === 'All' ? 'Tweets by gender' : 'Tweets with hate speech by gender'}
               values={selectedType === 'All' ? [totalData.maleTweet, totalData.totalTweet - totalData.maleTweet] : [totalData.maleHateTweet, totalData.femaleHateTweet]}
               keyValue={['Men', 'Women']}
-              color={['#00C4AA', '#8700F9']}
-              opacity={[selectedGender !== 'Women' ? 1 : 0.3, selectedGender !== 'Men' ? 1 : 0.3]}
+              color={[selectedGender !== 'Women' ? '#00C4AA' : '#EAEAEA', selectedGender !== 'Men' ? '#8700F9' : '#EAEAEA']}
+              opacity={[1, 1]}
               subNote={selectedType === 'All' ? 'Total tweets' : 'Hate tweets'}
               subNoteValue={selectedType === 'All' ? totalData.totalTweet : totalData.maleHateTweet + totalData.femaleHateTweet}
               setGender={setSelectedGender}
@@ -140,10 +140,10 @@ const Dashboard = (props: Props) => {
               values={
                 [
                   selectedGender === 'All'
-                    ? totalDataForBar.totalTweet
+                    ? totalDataForBar.eduTweet
                     : selectedGender === 'Men'
-                      ? totalDataForBar.maletotalTweet
-                      : totalDataForBar.totalTweet - totalDataForBar.maletotalTweet,
+                      ? totalDataForBar.maleEduTweet
+                      : totalDataForBar.eduTweet - totalDataForBar.maleEduTweet,
                   selectedGender === 'All'
                     ? totalDataForBar.politicsTweet
                     : selectedGender === 'Men'
@@ -199,6 +199,7 @@ const Dashboard = (props: Props) => {
             <WordCloud
               country={country}
               dates={[dates.startDate, dates.endDate]}
+              category={selectedTag}
             />
           </RootEl>
         </>

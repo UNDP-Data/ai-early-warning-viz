@@ -36,7 +36,7 @@ const SettingsPanel = styled.div`
   align-items: center;
   flex-wrap: wrap;
 `;
-const DATASOURCELINK = './data/';
+const DATASOURCELINK = process.env.NODE_ENV !== 'production' ? './data/' : '../EWS/';
 
 const MainArea = (props: PassedProps) => {
   const { country } = props;
@@ -184,10 +184,10 @@ const MainArea = (props: PassedProps) => {
                   <Radio.Group size='middle' defaultValue='total' buttonStyle='solid' value={selectedTag} onChange={(event) => { setSelectedTag(event.target.value); }}>
                     <Radio.Button value='total'>All</Radio.Button>
                     <Radio.Button value='education'>Education</Radio.Button>
-                    <Radio.Button value='violence'>Violence</Radio.Button>
-                    <Radio.Button value='reproduction'>Reproduction</Radio.Button>
-                    <Radio.Button value='work'>Employment</Radio.Button>
                     <Radio.Button value='politics'>Politics</Radio.Button>
+                    <Radio.Button value='reproduction'>Reproduction</Radio.Button>
+                    <Radio.Button value='violence'>Violence</Radio.Button>
+                    <Radio.Button value='work'>Employment</Radio.Button>
                   </Radio.Group>
                   <DateRangePicker
                     startDate={dates.startDate}
