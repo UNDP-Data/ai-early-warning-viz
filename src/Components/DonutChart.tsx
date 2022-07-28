@@ -87,7 +87,7 @@ export const DonutChartCard = (props: Props) => {
     setGender,
   } = props;
 
-  const formatData = (d: number) => format(',')(parseFloat(d.toFixed(0)));
+  const formatData = (d: number) => format(',')(parseFloat(d.toFixed(0))).replace(',', ' ');
   return (
     <RootEl>
       <TitleEl>{title}</TitleEl>

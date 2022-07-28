@@ -7,6 +7,7 @@ import { Radio } from 'antd';
 import sumBy from 'lodash.sumby';
 import { DonutChartCard } from './Components/DonutChart';
 import { BarChartCard } from './Components/BarChart';
+import WordCloud from './Components/WordCloud';
 import TimeSeries from './Components/TimeSeries';
 import { DateRangeType, FinalHourlyDataType } from './types';
 
@@ -19,6 +20,7 @@ interface Props {
   selectedType: 'All' | 'Hate';
   setSelectedType: (_d: 'All' | 'Hate') => void;
   dates: DateRangeType;
+  country: string;
 }
 
 const ContainerEl = styled.div`
@@ -65,6 +67,7 @@ const Dashboard = (props: Props) => {
     selectedType,
     setSelectedType,
     dates,
+    country,
   } = props;
   const totalData = {
     totalTweet: sumBy(hourlyData[selectedTag].filter((d) => d.dateTime >= dates.startDate && d.dateTime <= dates.endDate), (d) => d.tweets),
@@ -96,8 +99,8 @@ const Dashboard = (props: Props) => {
               title={selectedType === 'All' ? 'Tweets by gender' : 'Tweets with hate speech by gender'}
               values={selectedType === 'All' ? [totalData.maleTweet, totalData.totalTweet - totalData.maleTweet] : [totalData.maleHateTweet, totalData.femaleHateTweet]}
               keyValue={['Men', 'Women']}
-              color={['#00C4AA', '#8700F9']}
-              opacity={[selectedGender !== 'Women' ? 1 : 0.3, selectedGender !== 'Men' ? 1 : 0.3]}
+              color={[selectedGender !== 'Women' ? '#00C4AA' : '#EAEAEA', selectedGender !== 'Men' ? '#8700F9' : '#EAEAEA']}
+              opacity={[1, 1]}
               subNote={selectedType === 'All' ? 'Total tweets' : 'Hate tweets'}
               subNoteValue={selectedType === 'All' ? totalData.totalTweet : totalData.maleHateTweet + totalData.femaleHateTweet}
               setGender={setSelectedGender}
@@ -137,10 +140,10 @@ const Dashboard = (props: Props) => {
               values={
                 [
                   selectedGender === 'All'
-                    ? totalDataForBar.totalTweet
+                    ? totalDataForBar.eduTweet
                     : selectedGender === 'Men'
-                      ? totalDataForBar.maletotalTweet
-                      : totalDataForBar.totalTweet - totalDataForBar.maletotalTweet,
+                      ? totalDataForBar.maleEduTweet
+                      : totalDataForBar.eduTweet - totalDataForBar.maleEduTweet,
                   selectedGender === 'All'
                     ? totalDataForBar.politicsTweet
                     : selectedGender === 'Men'
@@ -187,6 +190,16 @@ const Dashboard = (props: Props) => {
                 totalFemalehateTweet: d.femaleHate,
               }))}
               hourly={timeFrame === 'Hourly'}
+            />
+          </RootEl>
+          <RootEl>
+            <TitleContainer>
+              <TitleEl>Wordcloud for tweets with hate speech for all users</TitleEl>
+            </TitleContainer>
+            <WordCloud
+              country={country}
+              dates={[dates.startDate, dates.endDate]}
+              category={selectedTag}
             />
           </RootEl>
         </>

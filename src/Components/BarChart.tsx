@@ -48,7 +48,7 @@ export const BarChartCard = (props: Props) => {
     top: 20,
     bottom: 20,
     left: 20,
-    right: 10,
+    right: 20,
   };
   const graphHeight = 360 - margin.top - margin.bottom;
   const graphWidth = 360 - margin.left - margin.right;
