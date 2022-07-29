@@ -139,19 +139,13 @@ const GlobalStyle = createGlobalStyle`
 const ContainerEl = styled.div`
   width: 100%;
   max-width: 128rem;
-  margin: 6rem auto 4rem auto;
+  margin: 0rem auto 1rem auto;
 `;
 
 const HeadContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-`;
-
-const TitleEl = styled.div`
-  font-size: 3.2rem;
-  font-weight: bold;
-  color: var(--primary-blue);
 `;
 
 const ToggleContainer = styled.div`
@@ -179,6 +173,26 @@ const ToggleEl = styled.div<ToggleDataType>`
   }
 `;
 
+const ButtonEl = styled.div`
+  font-size: 1.6rem;
+  font-weight: 600;
+  padding: 1rem 2rem;
+  align-items: center;
+  text-transform: uppercase;
+  color: var(--black-700);
+  cursor: pointer;
+  background-color: var(--white);  
+  &:hover {
+    background-color: var(--blue-very-light); 
+    color: var(--primary-blue); 
+  }
+  height: 5.2rem;
+  border: 2px solid #000;
+  margin-right: 2rem;
+`;
+
+const METHODOLOGYLINK = process.env.NODE_ENV !== 'production' ? './data/' : 'https://data.undp.org/gender-social-media-monitoring-viz-v3/data/';
+
 const App = () => {
   const [country, setCountry] = useState('Uganda');
   return (
@@ -186,14 +200,12 @@ const App = () => {
       <GlobalStyle />
       <ContainerEl>
         <HeadContainer>
-          <TitleEl>
-            UNDP Gender Social Media Monitoring - Pilot
-          </TitleEl>
           <ToggleContainer>
             <ToggleEl selected={country === 'Colombia'} onClick={() => { setCountry('Colombia'); }}>Colombia</ToggleEl>
             <ToggleEl selected={country === 'Philippines'} onClick={() => { setCountry('Philippines'); }}>Philippines</ToggleEl>
             <ToggleEl selected={country === 'Uganda'} onClick={() => { setCountry('Uganda'); }}>Uganda</ToggleEl>
           </ToggleContainer>
+          <a href={`${METHODOLOGYLINK}Methodology_UNDP Gender Social Media Monitoring.pdf`} target='_blank' rel='noreferrer'><ButtonEl>Methodology</ButtonEl></a>
         </HeadContainer>
       </ContainerEl>
       <MainArea
