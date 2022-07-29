@@ -7,7 +7,6 @@ import { Radio } from 'antd';
 import sumBy from 'lodash.sumby';
 import { DonutChartCard } from './Components/DonutChart';
 import { BarChartCard } from './Components/BarChart';
-import WordCloud from './Components/WordCloud';
 import TimeSeries from './Components/TimeSeries';
 import { DateRangeType, FinalHourlyDataType } from './types';
 
@@ -20,7 +19,6 @@ interface Props {
   selectedType: 'All' | 'Hate';
   setSelectedType: (_d: 'All' | 'Hate') => void;
   dates: DateRangeType;
-  country: string;
 }
 
 const ContainerEl = styled.div`
@@ -67,7 +65,6 @@ const Dashboard = (props: Props) => {
     selectedType,
     setSelectedType,
     dates,
-    country,
   } = props;
   const totalData = {
     totalTweet: sumBy(hourlyData[selectedTag].filter((d) => d.dateTime >= dates.startDate && d.dateTime <= dates.endDate), (d) => d.tweets),
@@ -123,7 +120,7 @@ const Dashboard = (props: Props) => {
               }
               keyValue={['Tweets with hate speech', 'Tweets without hate speech']}
               color={['#a8071a', '#AAA']}
-              subNote='Hate Speech Tweet'
+              subNote='Hate Speech Tweets'
               subNoteValue={
                       selectedGender === 'All'
                         ? totalData.maleHateTweet + totalData.femaleHateTweet
@@ -190,16 +187,6 @@ const Dashboard = (props: Props) => {
                 totalFemalehateTweet: d.femaleHate,
               }))}
               hourly={timeFrame === 'Hourly'}
-            />
-          </RootEl>
-          <RootEl>
-            <TitleContainer>
-              <TitleEl>Wordcloud for tweets with hate speech for all users</TitleEl>
-            </TitleContainer>
-            <WordCloud
-              country={country}
-              dates={[dates.startDate, dates.endDate]}
-              category={selectedTag}
             />
           </RootEl>
         </>

@@ -211,7 +211,6 @@ const MainArea = (props: PassedProps) => {
                   selectedType={selectedType}
                   dates={dates}
                   setSelectedGender={setSelectedGender}
-                  country={country}
                 />
               </>
             )
