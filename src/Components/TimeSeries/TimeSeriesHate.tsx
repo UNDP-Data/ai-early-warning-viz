@@ -234,7 +234,7 @@ const TimeSeriesHate = (props: PassedProps) => {
                 x={0}
                 y={0}
                 fill='#fff'
-                opacity={0.5}
+                opacity={0.75}
                 width={150}
                 height={210}
               />
@@ -264,10 +264,10 @@ const TimeSeriesHate = (props: PassedProps) => {
                 fontSize={12}
                 alignmentBaseline='middle'
               >
-                Men
+                Total
               </text>
               <text
-                ref={MaleHateTweetTextRef}
+                ref={TotalHateTweetTextRef}
                 x={145}
                 y={60}
                 textAnchor='end'
@@ -282,10 +282,10 @@ const TimeSeriesHate = (props: PassedProps) => {
                 fontSize={12}
                 alignmentBaseline='middle'
               >
-                Women
+                Men
               </text>
               <text
-                ref={FemaleHateTweetTextRef}
+                ref={MaleHateTweetTextRef}
                 x={145}
                 y={80}
                 textAnchor='end'
@@ -300,10 +300,10 @@ const TimeSeriesHate = (props: PassedProps) => {
                 fontSize={12}
                 alignmentBaseline='middle'
               >
-                Total
+                Women
               </text>
               <text
-                ref={TotalHateTweetTextRef}
+                ref={FemaleHateTweetTextRef}
                 x={145}
                 y={100}
                 textAnchor='end'

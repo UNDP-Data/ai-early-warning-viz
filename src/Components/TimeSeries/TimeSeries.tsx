@@ -108,15 +108,15 @@ const TimeSeries = (props: PassedProps) => {
       select(TotalTweetTextRef.current)
         .text(selectedData.totalTweet);
       select(MaleTweetTextRef.current)
-        .text(selectedData.totalTweet - selectedData.totalFemaleTweet);
+        .text(`${selectedData.totalTweet - selectedData.totalFemaleTweet} (${(((selectedData.totalTweet - selectedData.totalFemaleTweet) * 100) / selectedData.totalTweet).toFixed(1)}%)`);
       select(FemaleTweetTextRef.current)
-        .text(selectedData.totalFemaleTweet);
+        .text(`${selectedData.totalFemaleTweet} (${(((selectedData.totalFemaleTweet) * 100) / selectedData.totalTweet).toFixed(1)}%)`);
       select(TotalHateTweetTextRef.current)
-        .text(selectedData.totalHateTweet);
+        .text(`${selectedData.totalHateTweet} (${(((selectedData.totalHateTweet) * 100) / selectedData.totalTweet).toFixed(1)}%)`);
       select(MaleHateTweetTextRef.current)
-        .text(selectedData.totalHateTweet - selectedData.totalFemalehateTweet);
+        .text(`${selectedData.totalHateTweet - selectedData.totalFemalehateTweet} (${(((selectedData.totalHateTweet - selectedData.totalFemalehateTweet) * 100) / selectedData.totalTweet).toFixed(1)}%)`);
       select(FemaleHateTweetTextRef.current)
-        .text(selectedData.totalFemalehateTweet);
+        .text(`${selectedData.totalFemalehateTweet} (${(((selectedData.totalFemalehateTweet) * 100) / selectedData.totalTweet).toFixed(1)}%)`);
       select(TooltipGRef.current)
         .attr('opacity', 1)
         .attr('transform', `translate(${xScale(selectedData.dateTime.toDate()) > graphWidth - 250 ? xScale(selectedData.dateTime.toDate()) - 153 : xScale(selectedData.dateTime.toDate()) + 3},0)`);
@@ -285,7 +285,7 @@ const TimeSeries = (props: PassedProps) => {
                 x={0}
                 y={0}
                 fill='#fff'
-                opacity={0.5}
+                opacity={0.75}
                 width={150}
                 height={210}
               />
@@ -315,10 +315,10 @@ const TimeSeries = (props: PassedProps) => {
                 fontSize={12}
                 alignmentBaseline='middle'
               >
-                Men
+                Total
               </text>
               <text
-                ref={MaleTweetTextRef}
+                ref={TotalTweetTextRef}
                 x={145}
                 y={60}
                 textAnchor='end'
@@ -333,10 +333,10 @@ const TimeSeries = (props: PassedProps) => {
                 fontSize={12}
                 alignmentBaseline='middle'
               >
-                Women
+                Men
               </text>
               <text
-                ref={FemaleTweetTextRef}
+                ref={MaleTweetTextRef}
                 x={145}
                 y={80}
                 textAnchor='end'
@@ -351,10 +351,10 @@ const TimeSeries = (props: PassedProps) => {
                 fontSize={12}
                 alignmentBaseline='middle'
               >
-                Total
+                Women
               </text>
               <text
-                ref={TotalTweetTextRef}
+                ref={FemaleTweetTextRef}
                 x={145}
                 y={100}
                 textAnchor='end'
@@ -379,10 +379,10 @@ const TimeSeries = (props: PassedProps) => {
                 fontSize={12}
                 alignmentBaseline='middle'
               >
-                Men
+                Total
               </text>
               <text
-                ref={MaleHateTweetTextRef}
+                ref={TotalHateTweetTextRef}
                 x={145}
                 y={150}
                 textAnchor='end'
@@ -397,10 +397,10 @@ const TimeSeries = (props: PassedProps) => {
                 fontSize={12}
                 alignmentBaseline='middle'
               >
-                Women
+                Men
               </text>
               <text
-                ref={FemaleHateTweetTextRef}
+                ref={MaleHateTweetTextRef}
                 x={145}
                 y={170}
                 textAnchor='end'
@@ -415,10 +415,10 @@ const TimeSeries = (props: PassedProps) => {
                 fontSize={12}
                 alignmentBaseline='middle'
               >
-                Total
+                Women
               </text>
               <text
-                ref={TotalHateTweetTextRef}
+                ref={FemaleHateTweetTextRef}
                 x={145}
                 y={190}
                 textAnchor='end'
