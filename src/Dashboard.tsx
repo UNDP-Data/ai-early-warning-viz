@@ -1,9 +1,7 @@
-import styled from 'styled-components';
 import { useState } from 'react';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
-import 'antd/dist/antd.css';
-import { Radio } from 'antd';
+import { Segmented } from 'antd';
 import sumBy from 'lodash.sumby';
 import { DonutChartCard } from './Components/DonutChart';
 import { BarChartCard } from './Components/BarChart';
@@ -20,40 +18,6 @@ interface Props {
   setSelectedType: (_d: 'All' | 'Hate') => void;
   dates: DateRangeType;
 }
-
-const ContainerEl = styled.div`
-  width: 100%;
-  max-width: 128rem;
-  margin: auto;
-  padding: 1rem 0 2rem 0;
-`;
-
-const RowEl = styled.div`
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-`;
-
-const RootEl = styled.div`
-  margin: 2rem 0;
-  border-top: 6px solid var(--primary-blue);
-  padding: 1rem 2rem;
-  box-shadow: var(--shadow);
-  border-radius: 0.4rem;
-`;
-
-const TitleContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const TitleEl = styled.div`
-  font-size: 2rem;
-  font-weight: bold;
-  line-height: 3rem;
-  margin-bottom: 2rem;
-`;
 
 const Dashboard = (props: Props) => {
   const {
@@ -89,9 +53,9 @@ const Dashboard = (props: Props) => {
   const [timeFrame, setTimeFrame] = useState<'Hourly' | 'Day'>('Day');
   return (
     <div>
-      <ContainerEl>
+      <div>
         <>
-          <RowEl>
+          <div className='flex-div flex-wrap flex-space-between margin-bottom-07' style={{ alignItems: 'stretch' }}>
             <DonutChartCard
               title={selectedType === 'All' ? 'Tweets by gender' : 'Tweets with hate speech by gender'}
               values={selectedType === 'All' ? [totalData.maleTweet, totalData.totalTweet - totalData.maleTweet] : [totalData.maleHateTweet, totalData.femaleHateTweet]}
@@ -167,15 +131,35 @@ const Dashboard = (props: Props) => {
               keyValueCode={['education', 'politics', 'reproduction', 'violence', 'work']}
               setSelectedTag={setSelectedTag}
             />
-          </RowEl>
-          <RootEl>
-            <TitleContainer>
-              <TitleEl>Tweet trends over time</TitleEl>
-              <Radio.Group value={timeFrame} buttonStyle='solid' onChange={(event) => { setTimeFrame(event.target.value); }}>
-                <Radio.Button value='Day'>Day</Radio.Button>
-                <Radio.Button value='Hourly'>Hourly</Radio.Button>
-              </Radio.Group>
-            </TitleContainer>
+          </div>
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--gray-100)',
+            }}
+          >
+            <div className='flex-div flex-space-between flex-vert-align-center'>
+              <h5 className='undp-typography bold margin-bottom-00 margin-top-00'>Tweet trends over time</h5>
+              <Segmented
+                className='undp-segmented-small'
+                value={timeFrame}
+                onChange={(value) => { setTimeFrame((value as 'Day' | 'Hourly')); }}
+                options={
+                  [
+                    {
+                      label: 'Day',
+                      value: 'Day',
+                    },
+                    {
+                      label: 'Hourly',
+                      value: 'Hourly',
+                    },
+                  ]
+                }
+                onResize={() => {}}
+                onResizeCapture={() => {}}
+              />
+            </div>
             <TimeSeries
               data={hourlyData[selectedTag].filter((d) => d.dateTime >= dates.startDate && d.dateTime <= dates.endDate).map((d) => ({
                 dateTime: d.dateTime,
@@ -188,9 +172,9 @@ const Dashboard = (props: Props) => {
               }))}
               hourly={timeFrame === 'Hourly'}
             />
-          </RootEl>
+          </div>
         </>
-      </ContainerEl>
+      </div>
     </div>
   );
 };

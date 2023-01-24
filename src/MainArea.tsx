@@ -1,11 +1,10 @@
-import styled from 'styled-components';
 import { useEffect, useRef, useState } from 'react';
 import { DateRangePicker, FocusedInputShape } from 'react-dates';
 import moment from 'moment';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 import { csv } from 'd3-fetch';
-import { Radio, Spin } from 'antd';
+import { Radio } from 'antd';
 import maxBy from 'lodash.maxby';
 import sortBy from 'lodash.sortby';
 import uniqBy from 'lodash.uniqby';
@@ -22,19 +21,6 @@ interface PassedProps {
   country: string;
 }
 
-const ContainerEl = styled.div`
-  width: 100%;
-  max-width: 128rem;
-  margin: auto;
-  padding: 2rem 0;
-`;
-
-const SettingsPanel = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-`;
 const DATASOURCELINK = process.env.NODE_ENV !== 'production' ? './data/' : '../EWS/';
 
 const MainArea = (props: PassedProps) => {
@@ -164,44 +150,56 @@ const MainArea = (props: PassedProps) => {
   }, [country]);
   const [focussedDate, setFocusedData] = useState<FocusedInputShape | null>(null);
   return (
-    <div ref={divRef}>
-      <ContainerEl>
+    <div ref={divRef} className='undp-container'>
+      <div>
         {
           hourlyFinalData && dates && minMaxdate
             ? (
               <>
-                <SettingsPanel>
-                  <Radio.Group size='middle' defaultValue='All' buttonStyle='solid' value={selectedGender} onChange={(event) => { setSelectedGender(event.target.value); }}>
-                    <Radio.Button value='All'>All</Radio.Button>
-                    <Radio.Button value='Men'>Men</Radio.Button>
-                    <Radio.Button value='Women'>Women</Radio.Button>
-                  </Radio.Group>
-                  <Radio.Group size='middle' defaultValue='All' buttonStyle='solid' value={selectedType} onChange={(event) => { setSelectedType(event.target.value); }}>
-                    <Radio.Button value='All'>All</Radio.Button>
-                    <Radio.Button value='Hate'>Hate Speech</Radio.Button>
-                  </Radio.Group>
-                  <Radio.Group size='middle' defaultValue='total' buttonStyle='solid' value={selectedTag} onChange={(event) => { setSelectedTag(event.target.value); }}>
-                    <Radio.Button value='total'>All</Radio.Button>
-                    <Radio.Button value='education'>Education</Radio.Button>
-                    <Radio.Button value='politics'>Politics</Radio.Button>
-                    <Radio.Button value='reproduction'>Reproduction</Radio.Button>
-                    <Radio.Button value='violence'>Violence</Radio.Button>
-                    <Radio.Button value='work'>Employment</Radio.Button>
-                  </Radio.Group>
-                  <DateRangePicker
-                    startDate={dates.startDate}
-                    isOutsideRange={() => false}
-                    displayFormat='DD-MMM-YYYY'
-                    startDateId='your_unique_start_date_id'
-                    minDate={minMaxdate.startDate}
-                    endDate={dates.endDate}
-                    maxDate={minMaxdate.endDate}
-                    endDateId='your_unique_end_date_id'
-                    onDatesChange={({ startDate, endDate }) => { setDates({ startDate: startDate || moment(hourlyFinalData.total[0].dateTime), endDate: endDate || moment(hourlyFinalData.total[hourlyFinalData.total.length - 1].dateTime) }); }}
-                    focusedInput={focussedDate}
-                    onFocusChange={(focusedInput) => { setFocusedData(focusedInput); }}
-                  />
-                </SettingsPanel>
+                <div className='flex-div flex-wrap flex-space-between flex-vert-align-center margin-bottom-07 margin-top-07'>
+                  <div>
+                    <p className='label'>Filter by gender</p>
+                    <Radio.Group defaultValue='All' value={selectedGender} onChange={(event) => { setSelectedGender(event.target.value); }}>
+                      <Radio className='undp-radio' value='All'>All</Radio>
+                      <Radio className='undp-radio' value='Men'>Men</Radio>
+                      <Radio className='undp-radio' value='Women'>Women</Radio>
+                    </Radio.Group>
+                  </div>
+                  <div>
+                    <p className='label'>Filter by hate speech</p>
+                    <Radio.Group defaultValue='All' value={selectedType} onChange={(event) => { setSelectedType(event.target.value); }}>
+                      <Radio className='undp-radio' value='All'>All</Radio>
+                      <Radio className='undp-radio' value='Hate'>Hate Speech</Radio>
+                    </Radio.Group>
+                  </div>
+                  <div>
+                    <p className='label'>Filter by category</p>
+                    <Radio.Group defaultValue='total' value={selectedTag} onChange={(event) => { setSelectedTag(event.target.value); }}>
+                      <Radio className='undp-radio' value='total'>All</Radio>
+                      <Radio className='undp-radio' value='education'>Education</Radio>
+                      <Radio className='undp-radio' value='politics'>Politics</Radio>
+                      <Radio className='undp-radio' value='reproduction'>Reproduction</Radio>
+                      <Radio className='undp-radio' value='violence'>Violence</Radio>
+                      <Radio className='undp-radio' value='work'>Employment</Radio>
+                    </Radio.Group>
+                  </div>
+                  <div>
+                    <p className='label'>Select date range</p>
+                    <DateRangePicker
+                      startDate={dates.startDate}
+                      isOutsideRange={() => false}
+                      displayFormat='DD-MMM-YYYY'
+                      startDateId='your_unique_start_date_id'
+                      minDate={minMaxdate.startDate}
+                      endDate={dates.endDate}
+                      maxDate={minMaxdate.endDate}
+                      endDateId='your_unique_end_date_id'
+                      onDatesChange={({ startDate, endDate }) => { setDates({ startDate: startDate || moment(hourlyFinalData.total[0].dateTime), endDate: endDate || moment(hourlyFinalData.total[hourlyFinalData.total.length - 1].dateTime) }); }}
+                      focusedInput={focussedDate}
+                      onFocusChange={(focusedInput) => { setFocusedData(focusedInput); }}
+                    />
+                  </div>
+                </div>
                 <Dashboard
                   hourlyData={hourlyFinalData}
                   selectedTag={selectedTag}
@@ -214,9 +212,9 @@ const MainArea = (props: PassedProps) => {
                 />
               </>
             )
-            : <Spin />
+            : <div className='undp-loader' />
         }
-      </ContainerEl>
+      </div>
     </div>
   );
 };

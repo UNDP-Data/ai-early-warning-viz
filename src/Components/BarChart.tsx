@@ -12,26 +12,12 @@ interface Props {
   setSelectedTag: (_d: 'total' | 'education' | 'violence' | 'reproduction' | 'work' | 'politics') => void;
 }
 
-const ContentEl = styled.div`
-  display: flex;
-  align-items: flex-end;
-`;
-
 const RootEl = styled.div`
-  padding: 1rem 2rem;
-  margin: 2rem 0;
-  border-top: 6px solid var(--primary-blue);
-  min-width: 30rem;
-  width: calc(33.33% - 2rem);
-  box-shadow: var(--shadow);
-  border-radius: 0.4rem;
-`;
-
-const TitleEl = styled.div`
-  font-size: 2rem;
-  font-weight: bold;
-  line-height: 3rem;
-  margin-bottom: 2rem;
+  padding: 1rem;
+  background-color: var(--gray-100);
+  min-width: 20rem;
+  width: calc(33.33% - 2.667rem);
+  flex-grow: 1;
 `;
 
 export const BarChartCard = (props: Props) => {
@@ -62,8 +48,8 @@ export const BarChartCard = (props: Props) => {
   const barWidth = xScale.bandwidth();
   return (
     <RootEl>
-      <TitleEl>{title}</TitleEl>
-      <ContentEl>
+      <h6 className='undp-typography bold'>{title}</h6>
+      <div className='flex-div' style={{ alignItems: 'stretch' }}>
         <svg width='100%' viewBox='0 0 360 360' style={{ margin: 'auto' }}>
           <g transform={`translate(${margin.left},${margin.top})`}>
             {
@@ -112,7 +98,7 @@ export const BarChartCard = (props: Props) => {
             }
           </g>
         </svg>
-      </ContentEl>
+      </div>
     </RootEl>
   );
 };

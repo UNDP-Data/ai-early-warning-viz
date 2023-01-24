@@ -13,19 +13,12 @@ interface Props {
   setType?: (_d: 'Hate' | 'All') => void;
 }
 
-const ContentEl = styled.div`
-  display: flex;
-  align-items: flex-end;
-`;
-
 const RootEl = styled.div`
-  padding: 1rem 2rem;
-  margin: 2rem 0;
-  border-top: 6px solid var(--primary-blue);
-  min-width: 30rem;
-  width: calc(33.33% - 2rem);
-  box-shadow: var(--shadow);
-  border-radius: 0.4rem;
+  padding: 1rem;
+  background-color: var(--gray-100);
+  min-width: 20rem;
+  width: calc(33.33% - 2.667rem);
+  flex-grow: 1;
 `;
 
 const polarToCartesian = (centerX: number, centerY: number, radius: number, angleInDegrees: number) => {
@@ -48,30 +41,14 @@ export const describeArc = (x: number, y: number, radius: number, startAngle: nu
   return d;
 };
 
-const KeyEl = styled.div`
-  display: flex;
-  margin: 1rem 0; 
-  align-items: center;
-  font-size: 1.6rem;
-  line-height: 2rem;
-`;
-
 interface ColorElProps {
   color: string;
 }
 
 const ColorEl = styled.div<ColorElProps>`
-  width: 1.6rem;
-  height: 1.6rem;
-  margin-right: 0.5rem;
+  width: 1rem;
+  height: 1rem;
   background-color: ${(props) => props.color};
-`;
-
-const TitleEl = styled.div`
-  font-size: 2rem;
-  font-weight: bold;
-  line-height: 3rem;
-  margin-bottom: 2rem;
 `;
 
 export const DonutChartCard = (props: Props) => {
@@ -90,8 +67,8 @@ export const DonutChartCard = (props: Props) => {
   const formatData = (d: number) => format(',')(parseFloat(d.toFixed(0))).replace(',', ' ');
   return (
     <RootEl>
-      <TitleEl>{title}</TitleEl>
-      <KeyEl>
+      <h6 className='undp-typography bold'>{title}</h6>
+      <div className='flex-div margin-top-03 margin-bottom-03 flex-vert-align-center'>
         <ColorEl color={color[0]} />
         <div>
           {keyValue[0]}
@@ -105,8 +82,8 @@ export const DonutChartCard = (props: Props) => {
             )
           </span>
         </div>
-      </KeyEl>
-      <KeyEl>
+      </div>
+      <div className='flex-div margin-top-03 margin-bottom-03 flex-vert-align-center'>
         <ColorEl color={color[1]} />
         <div>
           {keyValue[1]}
@@ -120,8 +97,8 @@ export const DonutChartCard = (props: Props) => {
             )
           </span>
         </div>
-      </KeyEl>
-      <ContentEl>
+      </div>
+      <div className='flex-div' style={{ alignItems: 'stretch' }}>
         <svg width='320px' viewBox='0 0 360 360' style={{ margin: 'auto' }}>
           <path
             d={describeArc(180, 180, 140, 0, 360 * (values[0] / (values[0] + values[1])))}
@@ -179,7 +156,7 @@ export const DonutChartCard = (props: Props) => {
             {subNote}
           </text>
         </svg>
-      </ContentEl>
+      </div>
     </RootEl>
   );
 };
