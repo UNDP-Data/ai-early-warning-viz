@@ -16,7 +16,7 @@ const RootEl = styled.div`
   padding: 2rem;
   background-color: var(--gray-100);
   min-width: 24rem;
-  width: calc(33.33% - 5rem);
+  width: calc(33.33% - 5.34rem);
   flex-grow: 1;
 `;
 

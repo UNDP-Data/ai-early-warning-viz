@@ -55,7 +55,7 @@ const Dashboard = (props: Props) => {
     <div>
       <div>
         <>
-          <div className='flex-div flex-wrap flex-space-between margin-bottom-07' style={{ alignItems: 'stretch' }}>
+          <div className='flex-div flex-wrap flex-space-between margin-bottom-07 gap-07' style={{ alignItems: 'stretch' }}>
             <DonutChartCard
               title={selectedType === 'All' ? 'Tweets by gender' : 'Tweets with hate speech by gender'}
               values={selectedType === 'All' ? [totalData.maleTweet, totalData.totalTweet - totalData.maleTweet] : [totalData.maleHateTweet, totalData.femaleHateTweet]}
@@ -134,7 +134,7 @@ const Dashboard = (props: Props) => {
           </div>
           <div
             style={{
-              padding: '1rem',
+              padding: '2rem',
               backgroundColor: 'var(--gray-100)',
             }}
           >
