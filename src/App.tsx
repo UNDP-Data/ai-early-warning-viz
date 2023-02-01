@@ -8,10 +8,10 @@ const App = () => {
   const [country, setCountry] = useState('Uganda');
   return (
     <>
-      <div className='undp-container max-width'>
+      <div className='undp-container'>
         <div className='flex-div flex-space-between flex-wrap flex-vert-align-center'>
           <Segmented
-            className='undp-segmented'
+            className='undp-segmented-small'
             value={country}
             onChange={(value) => { setCountry((value as 'Uganda' | 'Colombia' | 'Philippines')); }}
             options={

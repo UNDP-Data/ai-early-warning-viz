@@ -10,6 +10,7 @@ import sortBy from 'lodash.sortby';
 import uniqBy from 'lodash.uniqby';
 import min from 'lodash.min';
 import max from 'lodash.max';
+import styled from 'styled-components';
 import {
   DateRangeType,
   FinalHourlyDataType,
@@ -17,11 +18,19 @@ import {
 } from './types';
 import Dashboard from './Dashboard';
 
+const VizAreaEl = styled.div`
+  display: flex;
+  margin: auto;
+  align-items: center;
+  justify-content: center;
+  height: 10rem;
+`;
+
 interface PassedProps {
   country: string;
 }
 
-const DATASOURCELINK = process.env.NODE_ENV !== 'production' ? './data/' : '../EWS/';
+const DATASOURCELINK = 'https://raw.githubusercontent.com/UNDP-Data/data-for-early-warning-system/main/';
 
 const MainArea = (props: PassedProps) => {
   const { country } = props;
@@ -158,6 +167,22 @@ const MainArea = (props: PassedProps) => {
               <>
                 <div className='flex-div flex-wrap flex-space-between flex-vert-align-center margin-bottom-07 margin-top-07'>
                   <div>
+                    <p className='label'>Select date range</p>
+                    <DateRangePicker
+                      startDate={dates.startDate}
+                      isOutsideRange={() => false}
+                      displayFormat='DD-MMM-YYYY'
+                      startDateId='your_unique_start_date_id'
+                      minDate={minMaxdate.startDate}
+                      endDate={dates.endDate}
+                      maxDate={minMaxdate.endDate}
+                      endDateId='your_unique_end_date_id'
+                      onDatesChange={({ startDate, endDate }) => { setDates({ startDate: startDate || moment(hourlyFinalData.total[0].dateTime), endDate: endDate || moment(hourlyFinalData.total[hourlyFinalData.total.length - 1].dateTime) }); }}
+                      focusedInput={focussedDate}
+                      onFocusChange={(focusedInput) => { setFocusedData(focusedInput); }}
+                    />
+                  </div>
+                  <div>
                     <p className='label'>Filter by gender</p>
                     <Radio.Group defaultValue='All' value={selectedGender} onChange={(event) => { setSelectedGender(event.target.value); }}>
                       <Radio className='undp-radio' value='All'>All</Radio>
@@ -183,22 +208,6 @@ const MainArea = (props: PassedProps) => {
                       <Radio className='undp-radio' value='work'>Employment</Radio>
                     </Radio.Group>
                   </div>
-                  <div>
-                    <p className='label'>Select date range</p>
-                    <DateRangePicker
-                      startDate={dates.startDate}
-                      isOutsideRange={() => false}
-                      displayFormat='DD-MMM-YYYY'
-                      startDateId='your_unique_start_date_id'
-                      minDate={minMaxdate.startDate}
-                      endDate={dates.endDate}
-                      maxDate={minMaxdate.endDate}
-                      endDateId='your_unique_end_date_id'
-                      onDatesChange={({ startDate, endDate }) => { setDates({ startDate: startDate || moment(hourlyFinalData.total[0].dateTime), endDate: endDate || moment(hourlyFinalData.total[hourlyFinalData.total.length - 1].dateTime) }); }}
-                      focusedInput={focussedDate}
-                      onFocusChange={(focusedInput) => { setFocusedData(focusedInput); }}
-                    />
-                  </div>
                 </div>
                 <Dashboard
                   hourlyData={hourlyFinalData}
@@ -212,7 +221,11 @@ const MainArea = (props: PassedProps) => {
                 />
               </>
             )
-            : <div className='undp-loader' />
+            : (
+              <VizAreaEl className='undp-container'>
+                <div className='undp-loader' />
+              </VizAreaEl>
+            )
         }
       </div>
     </div>

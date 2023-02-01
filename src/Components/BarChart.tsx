@@ -13,10 +13,10 @@ interface Props {
 }
 
 const RootEl = styled.div`
-  padding: 1rem;
+  padding: 2rem;
   background-color: var(--gray-100);
-  min-width: 20rem;
-  width: calc(33.33% - 2.667rem);
+  min-width: 24rem;
+  width: calc(33.33% - 5rem);
   flex-grow: 1;
 `;
 
@@ -50,7 +50,7 @@ export const BarChartCard = (props: Props) => {
     <RootEl>
       <h6 className='undp-typography bold'>{title}</h6>
       <div className='flex-div' style={{ alignItems: 'stretch' }}>
-        <svg width='100%' viewBox='0 0 360 360' style={{ margin: 'auto' }}>
+        <svg width='320px' viewBox='0 0 360 360' style={{ margin: 'auto', marginTop: 'var(--spacing-07)' }}>
           <g transform={`translate(${margin.left},${margin.top})`}>
             {
               values.map((d, i) => (

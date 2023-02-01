@@ -14,10 +14,10 @@ interface Props {
 }
 
 const RootEl = styled.div`
-  padding: 1rem;
+  padding: 2rem;
   background-color: var(--gray-100);
-  min-width: 20rem;
-  width: calc(33.33% - 2.667rem);
+  min-width: 24rem;
+  width: calc(33.33% - 5rem);
   flex-grow: 1;
 `;
 
