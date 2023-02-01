@@ -236,7 +236,7 @@ const TimeSeriesHate = (props: PassedProps) => {
                 fill='#fff'
                 opacity={0.75}
                 width={150}
-                height={210}
+                height={110}
               />
               <text
                 ref={DateTextRef}
