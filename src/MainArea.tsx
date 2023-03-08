@@ -17,6 +17,7 @@ import {
   HourDataType,
 } from './types';
 import Dashboard from './Dashboard';
+import { Translation } from './Language';
 
 const VizAreaEl = styled.div`
   display: flex;
@@ -28,12 +29,13 @@ const VizAreaEl = styled.div`
 
 interface PassedProps {
   country: string;
+  language: 'en' | 'es';
 }
 
 const DATASOURCELINK = 'https://raw.githubusercontent.com/UNDP-Data/data-for-early-warning-system/main/';
 
 const MainArea = (props: PassedProps) => {
-  const { country } = props;
+  const { country, language } = props;
   const divRef = useRef<any>(null);
   const [selectedGender, setSelectedGender] = useState<'All' | 'Men' | 'Women'>('All');
   const [selectedType, setSelectedType] = useState<'All' | 'Hate'>('All');
@@ -167,7 +169,10 @@ const MainArea = (props: PassedProps) => {
               <>
                 <div className='flex-div flex-wrap flex-space-between flex-vert-align-center margin-bottom-07 margin-top-07'>
                   <div>
-                    <p className='label'>Select date range</p>
+                    <p className='label'>
+                      {Translation[Translation.findIndex((d) => d.key === 'Select date range')][language]}
+
+                    </p>
                     <DateRangePicker
                       startDate={dates.startDate}
                       isOutsideRange={() => false}
@@ -183,29 +188,38 @@ const MainArea = (props: PassedProps) => {
                     />
                   </div>
                   <div>
-                    <p className='label'>Filter by gender</p>
+                    <p className='label'>
+                      {Translation[Translation.findIndex((d) => d.key === 'Filter by gender')][language]}
+
+                    </p>
                     <Radio.Group defaultValue='All' value={selectedGender} onChange={(event) => { setSelectedGender(event.target.value); }}>
-                      <Radio className='undp-radio' value='All'>All</Radio>
-                      <Radio className='undp-radio' value='Men'>Men</Radio>
-                      <Radio className='undp-radio' value='Women'>Women</Radio>
+                      <Radio className='undp-radio' value='All'>{Translation[Translation.findIndex((d) => d.key === 'All')][language]}</Radio>
+                      <Radio className='undp-radio' value='Men'>{Translation[Translation.findIndex((d) => d.key === 'Men')][language]}</Radio>
+                      <Radio className='undp-radio' value='Women'>{Translation[Translation.findIndex((d) => d.key === 'Women')][language]}</Radio>
                     </Radio.Group>
                   </div>
                   <div>
-                    <p className='label'>Filter by hate speech</p>
+                    <p className='label'>
+                      {Translation[Translation.findIndex((d) => d.key === 'Filter by hate speech')][language]}
+
+                    </p>
                     <Radio.Group defaultValue='All' value={selectedType} onChange={(event) => { setSelectedType(event.target.value); }}>
-                      <Radio className='undp-radio' value='All'>All</Radio>
-                      <Radio className='undp-radio' value='Hate'>Hate Speech</Radio>
+                      <Radio className='undp-radio' value='All'>{Translation[Translation.findIndex((d) => d.key === 'All')][language]}</Radio>
+                      <Radio className='undp-radio' value='Hate'>{Translation[Translation.findIndex((d) => d.key === 'Hate speech')][language]}</Radio>
                     </Radio.Group>
                   </div>
                   <div>
-                    <p className='label'>Filter by category</p>
+                    <p className='label'>
+                      {Translation[Translation.findIndex((d) => d.key === 'Filter by category')][language]}
+
+                    </p>
                     <Radio.Group defaultValue='total' value={selectedTag} onChange={(event) => { setSelectedTag(event.target.value); }}>
-                      <Radio className='undp-radio' value='total'>All</Radio>
-                      <Radio className='undp-radio' value='education'>Education</Radio>
-                      <Radio className='undp-radio' value='politics'>Politics</Radio>
-                      <Radio className='undp-radio' value='reproduction'>Reproduction</Radio>
-                      <Radio className='undp-radio' value='violence'>Violence</Radio>
-                      <Radio className='undp-radio' value='work'>Employment</Radio>
+                      <Radio className='undp-radio' value='total'>{Translation[Translation.findIndex((d) => d.key === 'All')][language]}</Radio>
+                      <Radio className='undp-radio' value='education'>{Translation[Translation.findIndex((d) => d.key === 'Education')][language]}</Radio>
+                      <Radio className='undp-radio' value='politics'>{Translation[Translation.findIndex((d) => d.key === 'Politics')][language]}</Radio>
+                      <Radio className='undp-radio' value='reproduction'>{Translation[Translation.findIndex((d) => d.key === 'Reproduction')][language]}</Radio>
+                      <Radio className='undp-radio' value='violence'>{Translation[Translation.findIndex((d) => d.key === 'Violence')][language]}</Radio>
+                      <Radio className='undp-radio' value='work'>{Translation[Translation.findIndex((d) => d.key === 'Employment')][language]}</Radio>
                     </Radio.Group>
                   </div>
                 </div>
@@ -218,6 +232,7 @@ const MainArea = (props: PassedProps) => {
                   selectedType={selectedType}
                   dates={dates}
                   setSelectedGender={setSelectedGender}
+                  language={language}
                 />
               </>
             )

@@ -6,6 +6,7 @@ import maxBy from 'lodash.maxby';
 import { bisector, max } from 'd3-array';
 import { pointer, select } from 'd3-selection';
 import moment from 'moment';
+import { Translation } from '../../Language';
 
 interface Datatype {
   dateTime: moment.Moment;
@@ -22,6 +23,7 @@ interface PassedProps {
   hourly: boolean;
   borderColor: [string, string, string];
   fillColor: [string, string, string];
+  language: 'en' | 'es';
 }
 
 const TimeSeries = (props: PassedProps) => {
@@ -30,6 +32,7 @@ const TimeSeries = (props: PassedProps) => {
     hourly,
     borderColor,
     fillColor,
+    language,
   } = props;
   const MouseoverRectRef = useRef(null);
 
@@ -151,7 +154,9 @@ const TimeSeries = (props: PassedProps) => {
             fontWeight='bold'
             fill={borderColor[0]}
           >
-            Tweets by men →
+            {Translation[Translation.findIndex((d) => d.key === 'Tweets by men')][language]}
+            {' '}
+            →
           </text>
           <text
             fontSize={18}
@@ -160,7 +165,9 @@ const TimeSeries = (props: PassedProps) => {
             fontWeight='bold'
             fill={borderColor[1]}
           >
-            ← Tweets by women
+            ←
+            {' '}
+            {Translation[Translation.findIndex((d) => d.key === 'Tweets by women')][language]}
           </text>
           <path
             clipPath='url(#clip)'
@@ -286,7 +293,7 @@ const TimeSeries = (props: PassedProps) => {
                 y={0}
                 fill='#fff'
                 opacity={0.75}
-                width={150}
+                width={175}
                 height={210}
               />
               <text
@@ -306,7 +313,7 @@ const TimeSeries = (props: PassedProps) => {
                 fontWeight='bold'
                 alignmentBaseline='middle'
               >
-                All tweets
+                {Translation[Translation.findIndex((d) => d.key === 'All tweets')][language]}
               </text>
               <text
                 x={5}
@@ -315,11 +322,11 @@ const TimeSeries = (props: PassedProps) => {
                 fontSize={12}
                 alignmentBaseline='middle'
               >
-                Total
+                {Translation[Translation.findIndex((d) => d.key === 'Total')][language]}
               </text>
               <text
                 ref={TotalTweetTextRef}
-                x={145}
+                x={170}
                 y={60}
                 textAnchor='end'
                 fontSize={12}
@@ -333,11 +340,11 @@ const TimeSeries = (props: PassedProps) => {
                 fontSize={12}
                 alignmentBaseline='middle'
               >
-                Men
+                {Translation[Translation.findIndex((d) => d.key === 'Men')][language]}
               </text>
               <text
                 ref={MaleTweetTextRef}
-                x={145}
+                x={170}
                 y={80}
                 textAnchor='end'
                 fontSize={12}
@@ -351,11 +358,11 @@ const TimeSeries = (props: PassedProps) => {
                 fontSize={12}
                 alignmentBaseline='middle'
               >
-                Women
+                {Translation[Translation.findIndex((d) => d.key === 'Women')][language]}
               </text>
               <text
                 ref={FemaleTweetTextRef}
-                x={145}
+                x={170}
                 y={100}
                 textAnchor='end'
                 fontSize={12}
@@ -370,7 +377,7 @@ const TimeSeries = (props: PassedProps) => {
                 fontWeight='bold'
                 alignmentBaseline='middle'
               >
-                Tweets with hate speech
+                {Translation[Translation.findIndex((d) => d.key === 'Tweets with hate speech')][language]}
               </text>
               <text
                 x={5}
@@ -379,11 +386,11 @@ const TimeSeries = (props: PassedProps) => {
                 fontSize={12}
                 alignmentBaseline='middle'
               >
-                Total
+                {Translation[Translation.findIndex((d) => d.key === 'Total')][language]}
               </text>
               <text
                 ref={TotalHateTweetTextRef}
-                x={145}
+                x={170}
                 y={150}
                 textAnchor='end'
                 fontSize={12}
@@ -397,11 +404,11 @@ const TimeSeries = (props: PassedProps) => {
                 fontSize={12}
                 alignmentBaseline='middle'
               >
-                Men
+                {Translation[Translation.findIndex((d) => d.key === 'Men')][language]}
               </text>
               <text
                 ref={MaleHateTweetTextRef}
-                x={145}
+                x={170}
                 y={170}
                 textAnchor='end'
                 fontSize={12}
@@ -415,11 +422,11 @@ const TimeSeries = (props: PassedProps) => {
                 fontSize={12}
                 alignmentBaseline='middle'
               >
-                Women
+                {Translation[Translation.findIndex((d) => d.key === 'Women')][language]}
               </text>
               <text
                 ref={FemaleHateTweetTextRef}
-                x={145}
+                x={170}
                 y={190}
                 textAnchor='end'
                 fontSize={12}

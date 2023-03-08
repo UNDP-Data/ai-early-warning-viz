@@ -7,6 +7,7 @@ import { DonutChartCard } from './Components/DonutChart';
 import { BarChartCard } from './Components/BarChart';
 import TimeSeries from './Components/TimeSeries';
 import { DateRangeType, FinalHourlyDataType } from './types';
+import { Translation } from './Language';
 
 interface Props {
   hourlyData: FinalHourlyDataType;
@@ -17,6 +18,7 @@ interface Props {
   selectedType: 'All' | 'Hate';
   setSelectedType: (_d: 'All' | 'Hate') => void;
   dates: DateRangeType;
+  language: 'en' | 'es';
 }
 
 const Dashboard = (props: Props) => {
@@ -29,6 +31,7 @@ const Dashboard = (props: Props) => {
     selectedType,
     setSelectedType,
     dates,
+    language,
   } = props;
   const totalData = {
     totalTweet: sumBy(hourlyData[selectedTag].filter((d) => d.dateTime >= dates.startDate && d.dateTime <= dates.endDate), (d) => d.tweets),
@@ -57,17 +60,17 @@ const Dashboard = (props: Props) => {
         <>
           <div className='flex-div flex-wrap flex-space-between margin-bottom-07 gap-07' style={{ alignItems: 'stretch' }}>
             <DonutChartCard
-              title={selectedType === 'All' ? 'Tweets by gender' : 'Tweets with hate speech by gender'}
+              title={selectedType === 'All' ? Translation[Translation.findIndex((d) => d.key === 'Tweets by gender')][language] : Translation[Translation.findIndex((d) => d.key === 'Tweets with hate speech by gender')][language]}
               values={selectedType === 'All' ? [totalData.maleTweet, totalData.totalTweet - totalData.maleTweet] : [totalData.maleHateTweet, totalData.femaleHateTweet]}
               keyValue={['Men', 'Women']}
               color={[selectedGender !== 'Women' ? '#00C4AA' : '#EAEAEA', selectedGender !== 'Men' ? '#8700F9' : '#EAEAEA']}
               opacity={[1, 1]}
-              subNote={selectedType === 'All' ? 'Total tweets' : 'Hate tweets'}
+              subNote={selectedType === 'All' ? Translation[Translation.findIndex((d) => d.key === 'Total tweets')][language] : Translation[Translation.findIndex((d) => d.key === 'Hate speech tweets')][language]}
               subNoteValue={selectedType === 'All' ? totalData.totalTweet : totalData.maleHateTweet + totalData.femaleHateTweet}
               setGender={setSelectedGender}
             />
             <DonutChartCard
-              title={selectedGender === 'All' ? 'Tweets with hate speech' : `Tweets with hate speech by ${selectedGender}`}
+              title={selectedGender === 'All' ? Translation[Translation.findIndex((d) => d.key === 'Tweets with hate speech')][language] : Translation[Translation.findIndex((d) => d.key === `Tweets with hate speech by ${selectedGender}`)][language]}
               values={
                 [
                   selectedGender === 'All'
@@ -82,7 +85,7 @@ const Dashboard = (props: Props) => {
                       : (totalData.totalTweet - totalData.maleTweet) - totalData.femaleHateTweet,
                 ]
               }
-              keyValue={['Tweets with hate speech', 'Tweets without hate speech']}
+              keyValue={[Translation[Translation.findIndex((d) => d.key === 'Tweets with hate speech')][language], Translation[Translation.findIndex((d) => d.key === 'Tweets without hate speech')][language]]}
               color={['#a8071a', '#AAA']}
               subNote='Hate Speech Tweets'
               subNoteValue={
@@ -96,7 +99,7 @@ const Dashboard = (props: Props) => {
               setType={setSelectedType}
             />
             <BarChartCard
-              title={selectedType === 'All' ? 'Tweets by categories' : ' Tweet with hate speech by category'}
+              title={selectedType === 'All' ? Translation[Translation.findIndex((d) => d.key === 'Tweets by categories')][language] : Translation[Translation.findIndex((d) => d.key === 'Tweets with hate speech by categories')][language]}
               selectedTag={selectedTag}
               values={
                 [
@@ -127,7 +130,7 @@ const Dashboard = (props: Props) => {
                       : totalDataForBar.workTweet - totalDataForBar.maleWorkTweet,
                 ]
               }
-              keyValue={['Education', 'Politics', 'Reproduction', 'Violence', 'Employment']}
+              keyValue={[Translation[Translation.findIndex((d) => d.key === 'Education')][language], Translation[Translation.findIndex((d) => d.key === 'Politics')][language], Translation[Translation.findIndex((d) => d.key === 'Reproduction')][language], Translation[Translation.findIndex((d) => d.key === 'Violence')][language], Translation[Translation.findIndex((d) => d.key === 'Employment')][language]]}
               keyValueCode={['education', 'politics', 'reproduction', 'violence', 'work']}
               setSelectedTag={setSelectedTag}
             />
@@ -139,7 +142,7 @@ const Dashboard = (props: Props) => {
             }}
           >
             <div className='flex-div flex-space-between flex-vert-align-center'>
-              <h5 className='undp-typography bold margin-bottom-00 margin-top-00'>Tweet trends over time</h5>
+              <h5 className='undp-typography bold margin-bottom-00 margin-top-00'>{Translation[Translation.findIndex((d) => d.key === 'Tweets trend over time')][language]}</h5>
               <Segmented
                 className='undp-segmented-small'
                 value={timeFrame}
@@ -147,11 +150,11 @@ const Dashboard = (props: Props) => {
                 options={
                   [
                     {
-                      label: 'Day',
+                      label: Translation[Translation.findIndex((d) => d.key === 'Day')][language],
                       value: 'Day',
                     },
                     {
-                      label: 'Hourly',
+                      label: Translation[Translation.findIndex((d) => d.key === 'Hourly')][language],
                       value: 'Hourly',
                     },
                   ]
@@ -171,6 +174,7 @@ const Dashboard = (props: Props) => {
                 totalFemalehateTweet: d.femaleHate,
               }))}
               hourly={timeFrame === 'Hourly'}
+              language={language}
             />
           </div>
         </>

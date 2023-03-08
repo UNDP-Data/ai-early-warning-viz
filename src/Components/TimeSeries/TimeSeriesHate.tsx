@@ -6,6 +6,7 @@ import maxBy from 'lodash.maxby';
 import { bisector, max } from 'd3-array';
 import { pointer, select } from 'd3-selection';
 import moment from 'moment';
+import { Translation } from '../../Language';
 
 interface Datatype {
   dateTime: moment.Moment;
@@ -22,6 +23,7 @@ interface PassedProps {
   hourly: boolean;
   borderColor: string;
   fillColor: string;
+  language: 'en' | 'es';
 }
 
 const TimeSeriesHate = (props: PassedProps) => {
@@ -30,6 +32,7 @@ const TimeSeriesHate = (props: PassedProps) => {
     hourly,
     borderColor,
     fillColor,
+    language,
   } = props;
   const MouseoverRectRef = useRef(null);
 
@@ -118,22 +121,26 @@ const TimeSeriesHate = (props: PassedProps) => {
         </defs>
         <g transform={`translate(${margin.left},0)`}>
           <text
-            fontSize={18}
+            fontSize={language === 'en' ? 18 : 14}
             textAnchor='middle'
             transform={`translate(-15,${graphHeight / 4}) rotate(-90)`}
             fontWeight='bold'
             fill={borderColor}
           >
-            Tweets with hate speech by men →
+            {Translation[Translation.findIndex((d) => d.key === 'Tweets with hate speech by men')][language]}
+            {' '}
+            →
           </text>
           <text
-            fontSize={18}
+            fontSize={language === 'en' ? 18 : 14}
             textAnchor='middle'
             transform={`translate(-15,${0.75 * graphHeight}) rotate(-90)`}
             fontWeight='bold'
             fill={borderColor}
           >
-            ← Tweets with hate speech by women
+            ←
+            {' '}
+            {Translation[Translation.findIndex((d) => d.key === 'Tweets with hate speech by women')][language]}
           </text>
           <path
             clipPath='url(#clip)'
@@ -235,7 +242,7 @@ const TimeSeriesHate = (props: PassedProps) => {
                 y={0}
                 fill='#fff'
                 opacity={0.75}
-                width={150}
+                width={175}
                 height={110}
               />
               <text
@@ -255,7 +262,7 @@ const TimeSeriesHate = (props: PassedProps) => {
                 fontWeight='bold'
                 alignmentBaseline='middle'
               >
-                Tweets with hate speech
+                {Translation[Translation.findIndex((d) => d.key === 'Tweets with hate speech')][language]}
               </text>
               <text
                 x={5}
@@ -264,11 +271,11 @@ const TimeSeriesHate = (props: PassedProps) => {
                 fontSize={12}
                 alignmentBaseline='middle'
               >
-                Total
+                {Translation[Translation.findIndex((d) => d.key === 'Total')][language]}
               </text>
               <text
                 ref={TotalHateTweetTextRef}
-                x={145}
+                x={170}
                 y={60}
                 textAnchor='end'
                 fontSize={12}
@@ -282,11 +289,11 @@ const TimeSeriesHate = (props: PassedProps) => {
                 fontSize={12}
                 alignmentBaseline='middle'
               >
-                Men
+                {Translation[Translation.findIndex((d) => d.key === 'Men')][language]}
               </text>
               <text
                 ref={MaleHateTweetTextRef}
-                x={145}
+                x={170}
                 y={80}
                 textAnchor='end'
                 fontSize={12}
@@ -300,11 +307,11 @@ const TimeSeriesHate = (props: PassedProps) => {
                 fontSize={12}
                 alignmentBaseline='middle'
               >
-                Women
+                {Translation[Translation.findIndex((d) => d.key === 'Women')][language]}
               </text>
               <text
                 ref={FemaleHateTweetTextRef}
-                x={145}
+                x={170}
                 y={100}
                 textAnchor='end'
                 fontSize={12}

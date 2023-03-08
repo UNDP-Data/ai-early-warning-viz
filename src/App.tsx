@@ -1,11 +1,13 @@
 import { useState } from 'react';
-import { Segmented } from 'antd';
+import { Segmented, Select } from 'antd';
+import { Translation } from './Language';
 import MainArea from './MainArea';
 
 const METHODOLOGYLINK = process.env.NODE_ENV !== 'production' ? './data/' : 'https://data.undp.org/gender-social-media-monitoring-viz-v3/data/';
 
 const App = () => {
   const [country, setCountry] = useState('Uganda');
+  const [language, updateLanguage] = useState<'es' | 'en'>('en');
   return (
     <>
       <div className='undp-container'>
@@ -33,11 +35,23 @@ const App = () => {
             onResize={() => {}}
             onResizeCapture={() => {}}
           />
-          <a href={`${METHODOLOGYLINK}Methodology_UNDP Gender Social Media Monitoring.pdf`} target='_blank' rel='noreferrer' className='undp-style'>Methodology</a>
+          <div className='flex-div flex-vert-align-center'>
+            <Select
+              className='undp-select undp-language-select'
+              defaultValue='en'
+              value={language}
+              onChange={(value) => { updateLanguage(value as 'en' | 'es'); }}
+            >
+              <Select.Option className='undp-select-option' value='en'>English</Select.Option>
+              <Select.Option className='undp-select-option' value='es'>Spanish</Select.Option>
+            </Select>
+            <a href={`${METHODOLOGYLINK}Methodology_UNDP Gender Social Media Monitoring.pdf`} target='_blank' rel='noreferrer' className='undp-style'>{Translation[Translation.findIndex((d) => d.key === 'Methodology')][language]}</a>
+          </div>
         </div>
       </div>
       <MainArea
         country={country}
+        language={language}
       />
     </>
   );
