@@ -41,8 +41,8 @@ export const Translation = [
   },
   {
     key: 'Reproduction',
-    en: 'Reproduction',
-    es: 'Reproducción',
+    en: 'Reproductive Rights',
+    es: 'Derechos Reproductivos',
   },
   {
     key: 'Violence',
@@ -56,8 +56,8 @@ export const Translation = [
   },
   {
     key: 'Tweets by gender',
-    en: 'Tweets by gender',
-    es: 'Tweets por género',
+    en: 'Tweets by sex',
+    es: 'Tweets por sexo',
   },
   {
     key: 'Total tweets',
@@ -71,8 +71,8 @@ export const Translation = [
   },
   {
     key: 'Tweets with hate speech by gender',
-    en: 'Tweets with hate speech by gender',
-    es: 'Tweets con discurso de odio por género',
+    en: 'Tweets with hate speech by sex',
+    es: 'Tweets con discurso de odio por sexo',
   },
   {
     key: 'Tweets with hate speech by Men',
@@ -151,8 +151,8 @@ export const Translation = [
   },
   {
     key: 'Filter by gender',
-    en: 'Filter by gender',
-    es: 'Filtrar por género',
+    en: 'Filter by sex',
+    es: 'Filtrar por sexo',
   },
   {
     key: 'Filter by hate speech',

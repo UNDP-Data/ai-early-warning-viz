@@ -87,7 +87,7 @@ const Dashboard = (props: Props) => {
               }
               keyValue={[Translation[Translation.findIndex((d) => d.key === 'Tweets with hate speech')][language], Translation[Translation.findIndex((d) => d.key === 'Tweets without hate speech')][language]]}
               color={['#a8071a', '#AAA']}
-              subNote='Hate Speech Tweets'
+              subNote={Translation[Translation.findIndex((d) => d.key === 'Total tweets')][language]}
               subNoteValue={
                       selectedGender === 'All'
                         ? totalData.maleHateTweet + totalData.femaleHateTweet
