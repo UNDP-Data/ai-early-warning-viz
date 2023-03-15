@@ -32,7 +32,7 @@ export const BarChartCard = (props: Props) => {
 
   const margin = {
     top: 20,
-    bottom: 20,
+    bottom: 35,
     left: 20,
     right: 20,
   };
@@ -72,16 +72,21 @@ export const BarChartCard = (props: Props) => {
                     ry={4}
                     width={barWidth}
                   />
-                  <text
-                    fill='#222'
-                    x={(xScale(keyValue[i]) as number) + (barWidth / 2)}
-                    y={graphHeight}
-                    textAnchor='middle'
-                    dy={15}
-                    fontSize={12}
-                  >
-                    {keyValue[i]}
-                  </text>
+                  {
+                    keyValue[i].split(' ').map((k, j) => (
+                      <text
+                        fill='#222'
+                        key={j}
+                        x={(xScale(keyValue[i]) as number) + (barWidth / 2)}
+                        y={graphHeight}
+                        textAnchor='middle'
+                        dy={15 + (j * 15)}
+                        fontSize={12}
+                      >
+                        {k}
+                      </text>
+                    ))
+                  }
                   <text
                     fill='#006EB5'
                     y={graphHeight - (d * (graphHeight / (max(values) as number)))}
