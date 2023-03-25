@@ -56,8 +56,8 @@ export const Translation = [
   },
   {
     key: 'Tweets by gender',
-    en: 'Tweets by sex',
-    es: 'Tweets por sexo',
+    en: 'Tweets by User Gender*',
+    es: 'Tweets por género de usuario*',
   },
   {
     key: 'Total tweets',
@@ -151,8 +151,8 @@ export const Translation = [
   },
   {
     key: 'Filter by gender',
-    en: 'Filter by sex',
-    es: 'Filtrar por sexo',
+    en: 'Filter by user gender*',
+    es: 'Filtrar por género de usuario*',
   },
   {
     key: 'Filter by hate speech',
@@ -163,5 +163,10 @@ export const Translation = [
     key: 'Filter by category',
     en: 'Filter by category',
     es: 'Filtrar por categoría',
+  },
+  {
+    key: 'genderFootnote',
+    en: 'Information reported reflects the gender of the Twitter user based on applying a gender prediction model. Current models reflect only a binary gender classification (men/women) and do not cover all gender identities',
+    es: 'La información reportada refleja el género del usuario de Twitter basado en la aplicación de un modelo de predicción de género. Los modelos actuales reflejan solamente una clasificación binaria de género (hombres/mujeres) y no cubren todas las identidades de género',
   },
 ];

@@ -211,7 +211,6 @@ const MainArea = (props: PassedProps) => {
                   <div>
                     <p className='label'>
                       {Translation[Translation.findIndex((d) => d.key === 'Filter by category')][language]}
-
                     </p>
                     <Radio.Group defaultValue='total' value={selectedTag} onChange={(event) => { setSelectedTag(event.target.value); }}>
                       <Radio className='undp-radio' value='total'>{Translation[Translation.findIndex((d) => d.key === 'All')][language]}</Radio>
@@ -234,6 +233,11 @@ const MainArea = (props: PassedProps) => {
                   setSelectedGender={setSelectedGender}
                   language={language}
                 />
+                <p className='undp-typography italics' style={{ color: 'var(--gray-600' }}>
+                  *
+                  {' '}
+                  {Translation[Translation.findIndex((d) => d.key === 'genderFootnote')][language]}
+                </p>
               </>
             )
             : (

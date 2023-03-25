@@ -68,6 +68,7 @@ const Dashboard = (props: Props) => {
               subNote={selectedType === 'All' ? Translation[Translation.findIndex((d) => d.key === 'Total tweets')][language] : Translation[Translation.findIndex((d) => d.key === 'Hate speech tweets')][language]}
               subNoteValue={selectedType === 'All' ? totalData.totalTweet : totalData.maleHateTweet + totalData.femaleHateTweet}
               setGender={setSelectedGender}
+              footnote={`* ${Translation[Translation.findIndex((d) => d.key === 'genderFootnote')][language]}`}
             />
             <DonutChartCard
               title={selectedGender === 'All' ? Translation[Translation.findIndex((d) => d.key === 'Tweets with hate speech')][language] : Translation[Translation.findIndex((d) => d.key === `Tweets with hate speech by ${selectedGender}`)][language]}

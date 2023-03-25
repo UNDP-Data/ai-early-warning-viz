@@ -11,6 +11,7 @@ interface Props {
   opacity: [number, number];
   setGender?: (_d: 'Men' | 'Women' | 'All') => void;
   setType?: (_d: 'Hate' | 'All') => void;
+  footnote?: string;
 }
 
 const RootEl = styled.div`
@@ -62,6 +63,7 @@ export const DonutChartCard = (props: Props) => {
     opacity,
     setType,
     setGender,
+    footnote,
   } = props;
 
   const formatData = (d: number) => format(',')(parseFloat(d.toFixed(0))).replace(',', ' ');
@@ -157,6 +159,14 @@ export const DonutChartCard = (props: Props) => {
           </text>
         </svg>
       </div>
+      {
+        footnote
+          ? (
+            <p className='undp-typography small-font italics margin-top-05' style={{ color: 'var(--gray-500' }}>
+              {footnote}
+            </p>
+          ) : null
+      }
     </RootEl>
   );
 };
